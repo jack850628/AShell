@@ -1,8 +1,0 @@
-先將要呼叫C函數的calss建好並且編譯好
-
-接下來生成.h檔
-
-以AShell.CallSystem為例，生成.h檔
-javah -classpath D:\Users\暘修\Documents\NetBeansProjects\AShell\build\classes AShell.CallSystem
-
-就可以去撰寫C函數生成.dll檔
