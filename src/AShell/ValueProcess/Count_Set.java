@@ -432,84 +432,6 @@ public class Count_Set {
 		}
                 return index;
 	}
-        /** 第六優先處理的運算子
-     * @param CountRecord 需要被運算的陣列
-     * @param index 須被運算的項目在陣列中的位置
-     * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet6(ArrayList<Count_Array> CountRecord,int index){
-		if(CountRecord.get(CountRecord.size()-1).size()>1){
-                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
-                        return ++index;
-                    switch (CountRecord.get(CountRecord.size()-1).
-                            get(index).
-                            Operator) {
-                        case "&":
-                            BooleanChange(CountRecord,index);
-                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
-                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
-                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a&b);
-                            CountRecord.get(CountRecord.size()-1).remove(index);
-                            break;
-                        default:
-                            index++;
-                    }
-		}
-                return index;
-	}
-        /** 第七優先處理的運算子
-     * @param CountRecord 需要被運算的陣列
-     * @param index 須被運算的項目在陣列中的位置
-     * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet7(ArrayList<Count_Array> CountRecord,int index){
-		if(CountRecord.get(CountRecord.size()-1).size()>1){
-                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
-                        return ++index;
-                    switch (CountRecord.get(CountRecord.size()-1).
-                            get(index).
-                            Operator) {
-                        case "^":
-                            BooleanChange(CountRecord,index);
-                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
-                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
-                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a^b);
-                            CountRecord.get(CountRecord.size()-1).remove(index);
-                            break;
-                        default:
-                            index++;
-                    }
-		}
-                return index;
-	}
-        /** 第八優先處理的運算子
-     * @param CountRecord 需要被運算的陣列
-     * @param index 須被運算的項目在陣列中的位置
-     * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet8(ArrayList<Count_Array> CountRecord,int index){
-		if(CountRecord.get(CountRecord.size()-1).size()>1){
-                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
-                        return ++index;
-                    switch (CountRecord.get(CountRecord.size()-1).
-                            get(index).
-                            Operator) {
-                        case "|":
-                            BooleanChange(CountRecord,index);
-                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
-                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
-                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
-                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a|b);
-                            CountRecord.get(CountRecord.size()-1).remove(index);
-                            break;
-                        default:
-                            index++;
-                    }
-		}
-                return index;
-	}
         
         /**特殊判斷模式的判斷方式
 [2<3>4]
@@ -529,11 +451,11 @@ public class Count_Set {
 不過3>4為假，所以拋出false錯誤
 **/
         
-        /** 第九優先處理的運算子
+        /** 第六優先處理的運算子
      * @param CountRecord 需要被運算的陣列
      * @param index 須被運算的項目在陣列中的位置
      * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet9(ArrayList<Count_Array> CountRecord,int index) throws Exception{
+        public static int CountSet6(ArrayList<Count_Array> CountRecord,int index) throws Exception{
 		if(CountRecord.get(CountRecord.size()-1).size()>1){
                     if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
                         return ++index;
@@ -552,7 +474,7 @@ public class Count_Set {
                             }else{
                                 if(!(a>=b))
                                     throw new Exception("false");
-                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(">|>=|<|<=")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                      CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -573,7 +495,7 @@ public class Count_Set {
                             }else{
                                 if(!(a<=b))
                                     throw new Exception("false");
-                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(">|>=|<|<=")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                      CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -594,7 +516,7 @@ public class Count_Set {
                             }else{
                                 if(!(a>b))
                                     throw new Exception("false");
-                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(">|>=|<|<=")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                      CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -615,7 +537,7 @@ public class Count_Set {
                             }else{
                                 if(!(a<b))
                                     throw new Exception("false");
-                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(">|>=|<|<=")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                      CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -624,6 +546,24 @@ public class Count_Set {
                             CountRecord.get(CountRecord.size()-1).remove(index);
                             break;
                         }
+                        default:
+                            index++;
+                    }
+		}
+                return index;
+	}
+        
+        /** 第七優先處理的運算子
+     * @param CountRecord 需要被運算的陣列
+     * @param index 須被運算的項目在陣列中的位置
+     * @return 接下來須被運算的項目在陣列中的位置*/
+        public static int CountSet7(ArrayList<Count_Array> CountRecord,int index) throws Exception{
+		if(CountRecord.get(CountRecord.size()-1).size()>1){
+                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
+                        return ++index;
+                    switch (CountRecord.get(CountRecord.size()-1).
+                            get(index).
+                            Operator) {
                         case "==":
                         case Code_String.IS:
                             BooleanChange(CountRecord,index);
@@ -638,7 +578,7 @@ public class Count_Set {
                                 }else{
                                     if(!item2.equals(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -655,7 +595,7 @@ public class Count_Set {
                                 }else{
                                     if(!(a==b))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -679,7 +619,7 @@ public class Count_Set {
                                 }else{
                                     if(item2.equals(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -696,7 +636,7 @@ public class Count_Set {
                                 }else{
                                     if(!(a!=b))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("&&|\\|\\||\\?|\\:")){//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -711,11 +651,92 @@ public class Count_Set {
 		}
                 return index;
 	}
+        
+        
+        /** 第八優先處理的運算子
+     * @param CountRecord 需要被運算的陣列
+     * @param index 須被運算的項目在陣列中的位置
+     * @return 接下來須被運算的項目在陣列中的位置*/
+        public static int CountSet8(ArrayList<Count_Array> CountRecord,int index){
+		if(CountRecord.get(CountRecord.size()-1).size()>1){
+                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
+                        return ++index;
+                    switch (CountRecord.get(CountRecord.size()-1).
+                            get(index).
+                            Operator) {
+                        case "&":
+                            BooleanChange(CountRecord,index);
+                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
+                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
+                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a&b);
+                            CountRecord.get(CountRecord.size()-1).remove(index);
+                            break;
+                        default:
+                            index++;
+                    }
+		}
+                return index;
+	}
+        /** 第九優先處理的運算子
+     * @param CountRecord 需要被運算的陣列
+     * @param index 須被運算的項目在陣列中的位置
+     * @return 接下來須被運算的項目在陣列中的位置*/
+        public static int CountSet9(ArrayList<Count_Array> CountRecord,int index){
+		if(CountRecord.get(CountRecord.size()-1).size()>1){
+                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
+                        return ++index;
+                    switch (CountRecord.get(CountRecord.size()-1).
+                            get(index).
+                            Operator) {
+                        case "^":
+                            BooleanChange(CountRecord,index);
+                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
+                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
+                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a^b);
+                            CountRecord.get(CountRecord.size()-1).remove(index);
+                            break;
+                        default:
+                            index++;
+                    }
+		}
+                return index;
+	}
         /** 第十優先處理的運算子
      * @param CountRecord 需要被運算的陣列
      * @param index 須被運算的項目在陣列中的位置
      * @return 接下來須被運算的項目在陣列中的位置*/
         public static int CountSet10(ArrayList<Count_Array> CountRecord,int index){
+		if(CountRecord.get(CountRecord.size()-1).size()>1){
+                    if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
+                        return ++index;
+                    switch (CountRecord.get(CountRecord.size()-1).
+                            get(index).
+                            Operator) {
+                        case "|":
+                            BooleanChange(CountRecord,index);
+                            long a=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
+                                    b=(long)IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
+                                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
+                            CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(a|b);
+                            CountRecord.get(CountRecord.size()-1).remove(index);
+                            break;
+                        default:
+                            index++;
+                    }
+		}
+                return index;
+	}
+        
+        /** 第十一優先處理的運算子
+     * @param CountRecord 需要被運算的陣列
+     * @param index 須被運算的項目在陣列中的位置
+     * @return 接下來須被運算的項目在陣列中的位置*/
+        public static int CountSet11(ArrayList<Count_Array> CountRecord,int index){
 		if(CountRecord.get(CountRecord.size()-1).size()>1){
                     if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
                         return ++index;
@@ -742,11 +763,11 @@ public class Count_Set {
 		}
                 return index;
 	}
-        /** 第十一處理的運算子
+        /** 第十二處理的運算子
      * @param CountRecord 需要被運算的陣列
      * @param index 須被運算的項目在陣列中的位置
      * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet11(ArrayList<Count_Array> CountRecord,int index){
+        public static int CountSet12(ArrayList<Count_Array> CountRecord,int index){
 		if(CountRecord.get(CountRecord.size()-1).size()>1){
                     if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
                         return ++index;
@@ -777,7 +798,7 @@ public class Count_Set {
      * @param CountRecord 需要被運算的陣列
      * @param index 須被運算的項目在陣列中的位置
      * @return 接下來須被運算的項目在陣列中的位置*/
-        public static int CountSet12(ArrayList<Count_Array> CountRecord,int index){
+        public static int CountSet13(ArrayList<Count_Array> CountRecord,int index){
 		if(CountRecord.get(CountRecord.size()-1).size()>1){
                     if(CountRecord.get(CountRecord.size()-1).get(index).Operator==null)
                         return ++index;
@@ -881,30 +902,44 @@ public class Count_Set {
 			count=CountSet5(CountRecord,count);
                 
                 for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
-			count=CountSet6(CountRecord,count);
-                
-                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
-			count=CountSet7(CountRecord,count);
-                
-                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
-			count=CountSet8(CountRecord,count);
-                
-                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
                     try{
-			count=CountSet9(CountRecord,count);
+			count=CountSet6(CountRecord,count);
                     }catch(Exception e){
                         if(e.getMessage().equals("false")){//當特殊判斷為假時(只有特殊判斷才會回傳這種錯誤)
                             CountRecord.get(CountRecord.size()-1).remove(count);
                             CountRecord.get(CountRecord.size()-1).get(count).Value.delete(0, CountRecord.get(CountRecord.size()-1).get(count).Value.length());
                             CountRecord.get(CountRecord.size()-1).get(count).Value.append(Type_String.FALSE);//將運涮結果定為假
                             while(count<CountRecord.get(CountRecord.size()-1).size()-1){//清除剩餘的特殊判斷式
-                                if(CountRecord.get(CountRecord.size()-1).get(count).Operator==null||CountRecord.get(CountRecord.size()-1).get(count).Operator.matches("&&|\\|\\||\\?|:"))//如果接下來沒有運算子 或 接下來的運算子是比邏輯判斷運算子的優先權還低
+                                if(CountRecord.get(CountRecord.size()-1).get(count).Operator==null||!CountRecord.get(CountRecord.size()-1).get(count).Operator.matches(">|>=|<|<="))//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     break;//那就代表特殊判段已經結束，但不代表接下來不會再有特殊判斷
                                 CountRecord.get(CountRecord.size()-1).get(count).Operator=CountRecord.get(CountRecord.size()-1).get(count+1).Operator;
                                 CountRecord.get(CountRecord.size()-1).remove(count+1);
                             }
                         }
                     }
+                
+                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
+                    try{
+			count=CountSet7(CountRecord,count);
+                    }catch(Exception e){
+                        if(e.getMessage().equals("false")){//當特殊判斷為假時(只有特殊判斷才會回傳這種錯誤)
+                            CountRecord.get(CountRecord.size()-1).remove(count);
+                            CountRecord.get(CountRecord.size()-1).get(count).Value.delete(0, CountRecord.get(CountRecord.size()-1).get(count).Value.length());
+                            CountRecord.get(CountRecord.size()-1).get(count).Value.append(Type_String.FALSE);//將運涮結果定為假
+                            while(count<CountRecord.get(CountRecord.size()-1).size()-1){//清除剩餘的特殊判斷式
+                                if(CountRecord.get(CountRecord.size()-1).get(count).Operator==null||!CountRecord.get(CountRecord.size()-1).get(count).Operator.matches("==|!=|<>|><"))//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                    break;//那就代表特殊判段已經結束，但不代表接下來不會再有特殊判斷
+                                CountRecord.get(CountRecord.size()-1).get(count).Operator=CountRecord.get(CountRecord.size()-1).get(count+1).Operator;
+                                CountRecord.get(CountRecord.size()-1).remove(count+1);
+                            }
+                        }
+                    }
+                
+                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
+			count=CountSet8(CountRecord,count);
+                
+                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
+			count=CountSet9(CountRecord,count);
                 
                 for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
 			count=CountSet10(CountRecord,count);
@@ -914,5 +949,8 @@ public class Count_Set {
                 
                 for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
 			count=CountSet12(CountRecord,count);
+                
+                for(int count=0;count<CountRecord.get(CountRecord.size()-1).size()-1;)
+			count=CountSet13(CountRecord,count);
         }
 }

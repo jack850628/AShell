@@ -5,8 +5,8 @@ class Type
 		var FLOAT     = 1
 		var BOOLEAN   = 2
 		var STRING    = 3
-		var SCLASS    = 4
-		var CLASS     = 5
+		var CLASS     = 4
+		var OBJECT    = 5
 		var FUNCTION  = 6
 		var NFUNCTION = 7
 		var ARRAY     = 8
