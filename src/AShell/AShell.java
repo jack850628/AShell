@@ -118,7 +118,7 @@ public class AShell {
             //Thread_Damage(r);
             while(Thread.Run!=null){
                 try{
-                    Thread.Run.RunState=false;
+                    Thread.RunState=false;
                     Thread.Run.interrupt();
                 }catch(Exception e){
                     //System.err.println("Log:"+(e.getMessage()));
@@ -443,6 +443,7 @@ public class AShell {
        }
    }
         public static class  Run_Point{//執行續指標，用來記錄一個AShell執行續在執行續清單裡的位置
+            public boolean RunState=true;//執行狀態
             static int count=0;//執行續編號遞增值
             int index;//執行續編號
             AShell.Run Run=null;//用來記錄該執行續現在執行中的java執行續
@@ -540,7 +541,6 @@ public class AShell {
                 Run_Point RP=null;
 		Run BackThread=null;//如果是上一個批次檔呼叫這次的腳本檔，則這個變數就會是上一個腳本檔的執行續
                 //StringBuilder Return =new StringBuilder("null");//函數的回傳直，當函數執行續發生例外時，會充當錯誤訊息回傳直
-                boolean RunState=true;//指令開始判斷
                 boolean NotIsFunction=false;//判斷是否要清除指令陣列，當這個變數為真時，就代表著這個執行續不是函數的
                 //boolean isNpcall=false;//判斷執行續是不是用npcall指令創造
                 //int setFun=0;//函數淵告判斷值，0為沒再宣告，1為宣告中，1以上為宣告函數中的函數
@@ -635,7 +635,7 @@ public class AShell {
 		public void run() {
                         If_Count IfState=new If_Count(-1);//用來存放被執行到的IF的狀態
                         try_Count Try=new try_Count();//用來存放被執行到的TRY的狀態
-                        for(int ComLenght=0;ComLenght<command.size()&&RunState;ComLenght++){
+                        for(int ComLenght=0;ComLenght<command.size()&&RP.RunState;ComLenght++){
                             //System.out.println("Log:    "+command.get(ComLenght).Command.toString());
 				try{
 					if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BEGIN)){
@@ -992,13 +992,14 @@ public class AShell {
                             CommandClear(command);
                             //此次批次結束後如果r不等於null則代表此次的批次是上一個批次(r)所呼叫，所以將上一個批次恢復運作
                         if(BackThread!=null){
-                            if(RP!=null&&RunState)
+                            if(RP!=null&&RP.RunState)
                                 RP.Run=BackThread;
                             synchronized(BackThread){
                                 BackThread.notify();
                             }
                         }else{
-                            if(RunState){//要RunState為真是因為當為假時一定是發生錯誤或呼叫了finally()，所以不需要再重複調用Stop()了
+                            if(RP.RunState){//要RunState為真是因為當為假時一定是發生錯誤或呼叫了finally()，所以不需要再重複調用Stop()了
+                                RP.RunState=false;
                                     //System.err.println("LOGE1:"+ThreadList+" "+ThreadList.size());
                                 ThreadList.remove(RP);
                                     // System.err.println("LOGE2:"+ThreadList+" "+ThreadList.size());
@@ -1043,7 +1044,7 @@ public class AShell {
                     If_Count IfState=new If_Count(-1);//用來存放被執行到的IF的狀態
                     try_Count Try=new try_Count();//用來存放被執行到的TRY的狀態
                     for(int ComLenght=0;ComLenght<command.size();ComLenght++){
-                                if(!RunState){
+                                if(!RP.RunState){
                                         ValueArray.clear();
                                         SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
 					return;
@@ -1384,7 +1385,7 @@ public class AShell {
                     while(new VarStrDW(AShell.this,RP,Boolean,JudgmentAreaValueArray,VarMode.Mode.Intermediary).Str.toString().matches(Type_String.TRUE+"|1")){
                         ValueArray=new Value_Array(JudgmentAreaValueArray);
                         for(int ComLenght=0;ComLenght<command.size();ComLenght++){
-				if(!RunState){
+				if(!RP.RunState){
                                         ValueArray.clear();
                                         JudgmentAreaValueArray.clear();
                                         SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
@@ -1774,7 +1775,7 @@ public class AShell {
                     do{
                         ValueArray=new Value_Array(JudgmentAreaValueArray);
                         for(int ComLenght=0;ComLenght<command.size();ComLenght++){
-				if(!RunState){
+				if(!RP.RunState){
                                         ValueArray.clear();
                                         JudgmentAreaValueArray.clear();
                                         SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);

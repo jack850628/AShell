@@ -411,6 +411,15 @@ public class Memory_Management {
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的類別記憶體");
         return M_get_Class(Integer.parseInt(assage.substring(("Ashell_"+Type_String.CLASS_N+"@").length()))).Obj;
     }
+    /**取得函數記憶體位置所在的Memory類別
+    *@param assage  記憶體位址
+    * @return  該記憶體位置的Key和值
+    */
+    public static Class_Memory_Type getClassCMT(String assage) throws Exception{
+        if(!assage.matches(Type_String.CLASS_M))
+            throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的類別記憶體");
+        return M_get_Class(Integer.parseInt(assage.substring(("Ashell_"+Type_String.CLASS_N+"@").length())));
+    }
     /**取得靜態類別記憶體位置所在的Memory類別
     *@param assage  記憶體位址
     * @return  該記憶體位置的Key和值
@@ -458,8 +467,7 @@ public class Memory_Management {
     public static Function_Memory_Type getFunctionForFMT(String assage) throws Exception{
         if(!assage.matches(Type_String.FUNCTION_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的函數記憶體");
-        Function_Memory_Type FMT=M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
-        return FMT;
+        return M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
     }
     /**取得函數記憶體位置所在的Memory類別
     *@param assage  記憶體位址

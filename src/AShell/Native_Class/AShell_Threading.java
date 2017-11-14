@@ -7,7 +7,8 @@ import AShell.ValueProcess.AShellType;
 public class AShell_Threading {
     AShell.Run_Point RP;
     public AShellType _start(AShell_this AShThis,AShellType[] Args){
-        RP=AShThis.AS.Thread_Run(AShThis.ValueArray);
+        if(RP==null||!RP.RunState)
+            RP=AShThis.AS.Thread_Run(AShThis.ValueArray);
         return new AShellType();
     }
     public AShellType _wait(AShell_this AShThis,AShellType[] Args) throws Exception{

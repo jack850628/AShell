@@ -61,20 +61,24 @@ public class Value_Array extends LinkedList<Value>{
         });*/
         if(Previous_Floor!=null)
             Previous_Floor.clear();
-        int functionForThis=0;//在這個變數清單建立的函數數量
+        int classAndFunctionForThis=0;//在這個變數清單建立的函數數量
         synchronized(this){
             for(Value V:this){
                 try {
-                    if(V.Tent.toString().matches(Type_String.FUNCTION_M)){//如果是函數
+                    if(V.Tent.toString().matches(Type_String.CLASS_M)){//如果是類別
+                        Memory_Management.Class_Memory_Type CMT=Memory_Management.getClassCMT(V.Tent.toString());
+                        if(CMT.getArguments()==1&&CMT.getObject().ValueArray.Previous_Floor==this)//如果參照數量只有1且閉包變數清單是現在這個變數清單，也就是說是在這個變數清單建立的類別
+                            classAndFunctionForThis++;
+                    }else if(V.Tent.toString().matches(Type_String.FUNCTION_M)){//如果是函數
                         Memory_Management.Function_Memory_Type FMT=Memory_Management.getFunctionForFMT(V.Tent.toString());
                         if(FMT.getArguments()==1&&FMT.getObject().Closure_ValueArray==this)//如果參照數量只有1且閉包變數清單是現在這個變數清單，也就是說是在這個變數清單建立的函數
-                            functionForThis++;
+                            classAndFunctionForThis++;
                     }
                 } catch (Exception ex) {
                     //Logger.getLogger(Value_Array.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if(--Arguments==0||functionForThis==Arguments){
+            if(--Arguments==0||classAndFunctionForThis==Arguments){
                 Release_Arguments();
                 super.clear();
                 instance_Class_Map.clear();
