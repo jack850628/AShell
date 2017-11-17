@@ -801,59 +801,74 @@ public class AShell {
                                                 //System.out.println("for判斷開始:"+(System.currentTimeMillis()-sLog));
                                                 SESC.Main=false;
                                                 ForArgsScan FAS=new ForArgsScan(command.get(ComLenght).Command.substring(Code_String.FOR.length()+1).trim());
-						RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2)
-                                                                            throw new Exception("標籤\""+SESC.Message+"\"未宣告。");
-                                                                    SESC.Message=Type_String.NULL;
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state==SubEndStateCode.State.Exception)
-                                                                        throw new Exception(SESC.Message);
-                                                                else if(SESC.state==SubEndStateCode.State.Return){
-                                                                    if(SESC.Message.equals(""))
-                                                                        SESC.Message=Type_String.NULL;
-                                                                    break;
-                                                                }
-                                                 SESC.Main=true;
+                                                try{
+                                                    RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.Main=true;
+                                                    throw e;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2)
+                                                        throw new Exception("標籤\""+SESC.Message+"\"未宣告。");
+                                                    SESC.Message=Type_String.NULL;
+                                                    ComLenght=Number;
+                                                }else if(SESC.state==SubEndStateCode.State.Exception)
+                                                    throw new Exception(SESC.Message);
+                                                else if(SESC.state==SubEndStateCode.State.Return){
+                                                    if(SESC.Message.equals(""))
+                                                        SESC.Message=Type_String.NULL;
+                                                    break;
+                                                }
+                                                SESC.Main=true;
                                                 //System.out.println("for判斷結束:"+(System.currentTimeMillis()-sLog));
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.WHILE+" ")){
                                                 //System.out.println("While判斷開始:"+(System.currentTimeMillis()-sLog));
                                                 SESC.Main=false;
-						RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2)
-                                                                            throw new Exception("標籤\""+SESC.Message+"\"未宣告。");
-                                                                    SESC.Message=Type_String.NULL;
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state==SubEndStateCode.State.Exception)
-                                                                        throw new Exception(SESC.Message);
-                                                                else if(SESC.state==SubEndStateCode.State.Return){
-                                                                    if(SESC.Message.equals(""))
-                                                                        SESC.Message=Type_String.NULL;
-                                                                    break;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.Main=true;
+                                                    throw e;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2)
+                                                        throw new Exception("標籤\""+SESC.Message+"\"未宣告。");
+                                                    SESC.Message=Type_String.NULL;
+                                                    ComLenght=Number;
+                                                }else if(SESC.state==SubEndStateCode.State.Exception)
+                                                    throw new Exception(SESC.Message);
+                                                else if(SESC.state==SubEndStateCode.State.Return){
+                                                    if(SESC.Message.equals(""))
+                                                        SESC.Message=Type_String.NULL;
+                                                    break;
+                                                }
                                                 SESC.Main=true;
                                                 //System.out.println("While判斷結束:"+(System.currentTimeMillis()-sLog));
-                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DO+" ")){//這裡不只用StringScan.startsWith()的原因是，在生成代碼樹的時候會把dwhile後面的條件移到do的後面
+                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DWHILE+" ")){//這裡不只用StringScan.startsWith()的原因是，在生成代碼樹的時候會把dwhile後面的條件移到do的後面
                                                 SESC.Main=false;
-						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DO.length()+1).trim(),
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2)
-                                                                            throw new Exception("標籤\""+command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim()+"\"未宣告。");
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state==SubEndStateCode.State.Exception)
-                                                                        throw new Exception(SESC.Message);
-                                                                else if(SESC.state==SubEndStateCode.State.Return){
-                                                                    if(SESC.Message.equals(""))
-                                                                        SESC.Message=Type_String.NULL;
-                                                                    break;
-                                                                }
+                                                try{
+                                                    RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.Main=true;
+                                                    throw e;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2)
+                                                        throw new Exception("標籤\""+command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim()+"\"未宣告。");
+                                                    ComLenght=Number;
+                                                }else if(SESC.state==SubEndStateCode.State.Exception)
+                                                    throw new Exception(SESC.Message);
+                                                else if(SESC.state==SubEndStateCode.State.Return){
+                                                    if(SESC.Message.equals(""))
+                                                        SESC.Message=Type_String.NULL;
+                                                    break;
+                                                }
                                                 SESC.Main=true;
 					}else if(command.get(ComLenght).Command.toString().startsWith(Code_String.GOTO+" ")){
                                             int Number=getTag(command,command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
@@ -1199,50 +1214,68 @@ public class AShell {
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FOR+" ")){
                                                 //System.out.println("for判斷開始:"+(System.currentTimeMillis()-sLog));
                                                 ForArgsScan FAS=new ForArgsScan(command.get(ComLenght).Command.substring(Code_String.FOR.length()+1).trim());
-						RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("for判斷結束:"+(System.currentTimeMillis()-sLog));
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.WHILE+" ")){
                                                 //System.out.println("While判斷開始:"+(System.currentTimeMillis()-sLog));
-						RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("While判斷結束:"+(System.currentTimeMillis()-sLog));
-                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DO)){
-						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DO.length()+1).trim(),
+                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DWHILE)){
+                                            try{
+						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    return;
-                                                                }
+                                            }catch(final Exception e){
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                ValueArray.clear();
+                                                return;
+                                            }
+                                            if(SESC.state==SubEndStateCode.State.Tag){
+                                                int Number=getTag(command,SESC.Message);
+                                                if(Number==-2){
+                                                    ValueArray.clear();
+                                                    return;
+                                                }
+                                                ComLenght=Number;
+                                            }else if(SESC.state!=SubEndStateCode.State.End){
+                                                ValueArray.clear();
+                                                return;
+                                            }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
                                                 SESC.setSubEndStateCode(SubEndStateCode.State.Break, null,0,command.fileName, null);
@@ -1581,56 +1614,77 @@ public class AShell {
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FOR+" ")){
                                                 //System.out.println("for判斷開始:"+(System.currentTimeMillis()-sLog));
                                                 ForArgsScan FAS=new ForArgsScan(command.get(ComLenght).Command.substring(Code_String.FOR.length()+1).trim());
-						RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        JudgmentAreaValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("for判斷結束:"+(System.currentTimeMillis()-sLog));
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.WHILE+" ")){
                                                 //System.out.println("While判斷開始:"+(System.currentTimeMillis()-sLog));
-						RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        JudgmentAreaValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("While判斷結束:"+(System.currentTimeMillis()-sLog));
-                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DO+" ")){
-						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DO.length()+1).trim(),
+                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DWHILE+" ")){
+                                            try{
+						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                            }catch(final Exception e){
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                ValueArray.clear();
+                                                JudgmentAreaValueArray.clear();
+                                                return;
+                                            }
+                                            if(SESC.state==SubEndStateCode.State.Tag){
+                                                int Number=getTag(command,SESC.Message);
+                                                if(Number==-2){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                ComLenght=Number;
+                                            }else if(SESC.state!=SubEndStateCode.State.End){
+                                                ValueArray.clear();
+                                                JudgmentAreaValueArray.clear();
+                                                return;
+                                            }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -2001,56 +2055,77 @@ public class AShell {
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FOR+" ")){
                                                 //System.out.println("for判斷開始:"+(System.currentTimeMillis()-sLog));
                                                 ForArgsScan FAS=new ForArgsScan(command.get(ComLenght).Command.substring(Code_String.FOR.length()+1).trim());
-						RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        JudgmentAreaValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("for判斷結束:"+(System.currentTimeMillis()-sLog));
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.WHILE+" ")){
                                                 //System.out.println("While判斷開始:"+(System.currentTimeMillis()-sLog));
-						RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
-                                                        new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                                try{
+                                                    RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
+                                                            new Value_Array(ValueArray),command.get(ComLenght).ComArray);
+                                                }catch(final Exception e){
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                if(SESC.state==SubEndStateCode.State.Tag){
+                                                    int Number=getTag(command,SESC.Message);
+                                                    if(Number==-2){
+                                                        ValueArray.clear();
+                                                        JudgmentAreaValueArray.clear();
+                                                        return;
+                                                    }
+                                                    ComLenght=Number;
+                                                }else if(SESC.state!=SubEndStateCode.State.End){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
                                                 //System.out.println("While判斷結束:"+(System.currentTimeMillis()-sLog));
-                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DO+" ")){
-						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DO.length()+1).trim(),
+                                        }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.DWHILE+" ")){
+                                            try{
+						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                                if(SESC.state==SubEndStateCode.State.Tag){
-                                                                    int Number=getTag(command,SESC.Message);
-                                                                    if(Number==-2){
-                                                                        ValueArray.clear();
-                                                                        JudgmentAreaValueArray.clear();
-                                                                        return;
-                                                                    }
-                                                                    ComLenght=Number;
-                                                                }else if(SESC.state!=SubEndStateCode.State.End){
-                                                                    ValueArray.clear();
-                                                                    JudgmentAreaValueArray.clear();
-                                                                    return;
-                                                                }
+                                            }catch(final Exception e){
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                ValueArray.clear();
+                                                JudgmentAreaValueArray.clear();
+                                                return;
+                                            }
+                                            if(SESC.state==SubEndStateCode.State.Tag){
+                                                int Number=getTag(command,SESC.Message);
+                                                if(Number==-2){
+                                                    ValueArray.clear();
+                                                    JudgmentAreaValueArray.clear();
+                                                    return;
+                                                }
+                                                ComLenght=Number;
+                                            }else if(SESC.state!=SubEndStateCode.State.End){
+                                                ValueArray.clear();
+                                                JudgmentAreaValueArray.clear();
+                                                return;
+                                            }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();

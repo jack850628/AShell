@@ -24,7 +24,8 @@ public class CreateSyntaxTree {
             }else if(StringScan.startsWith(temp.toString(),Code_String.BEGIN)||temp.toString().startsWith(Code_String.IF+" ")||temp.toString().startsWith(Code_String.ELSEIF+" ")||StringScan.startsWith(temp.toString(),Code_String.ELSE)||temp.toString().startsWith(Code_String.FOR+" ")||
                     temp.toString().startsWith(Code_String.WHILE+" ")||StringScan.startsWith(temp.toString(),Code_String.DO)||StringScan.startsWith(temp.toString(),Code_String.TRY)||temp.toString().startsWith(Code_String.CATCH+" ")||StringScan.startsWith(temp.toString(),Code_String.FINALLY)){
                CommandArray CA=new CommandArray(ComArray.fileName);
-                ComArray.get(i).setComArray(CA);
+               if(!StringScan.startsWith(temp.toString(),Code_String.DO))//因為如果是do-while，那麼程式碼區段就要放在dwhile那行，所以排除do
+                    ComArray.get(i).setComArray(CA);
                 int con=0;
                 boolean loop=false;//這個變數為真的話，就代表著迴圈區塊中還包著其他的迴圈區塊
                 while(true){
@@ -61,8 +62,8 @@ public class CreateSyntaxTree {
                             }
                     }else if(temp.toString().startsWith(Code_String.DWHILE+" "))
                             if(con--==0){
-                                ComArray.get(i).Command=new StringBuilder(ComArray.get(i).Command).append(temp.toString().substring(Code_String.DWHILE.length()));//把dwhile後面的條件移到do的後面，另外會使用new StringBuilder()是因為CommandArray裡的建構式中AShell的程式碼(StringBuilder)是直接參照，所以在這裡把AShell的程式碼改了來源那裡的也會一起被更動
-                                ComArray.remove(i+1);
+                                ComArray.remove(i);//將do那行刪除
+                                ComArray.get(i).setComArray(CA);//將程式碼區段就要放在dwhile這行
                                 break;
                             }
                     CA.add(ComArray.remove(i+1));
