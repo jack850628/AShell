@@ -20,6 +20,9 @@ public class interactive_Mode_Run {
         String Com = null;
         //------------加入Stdio函式庫---------------
         command.add(new Command(new StringBuilder("using Stdio.ash"),0));
+        command.add(new Command(new StringBuilder("native help(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
+        command.add(new Command(new StringBuilder("native exit(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
+        command.add(new Command(new StringBuilder("native ver(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
         AS.ComLineRun(ValueArray,command);
         synchronized(this){
             try {
@@ -172,9 +175,7 @@ public class interactive_Mode_Run {
                             System.out.println(Code_String.ENDCL+"無法單獨使用，須和"+Code_String.CLASS+"一同使用。");
                     else if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ENDTR))
                             System.out.println(Code_String.ENDTR+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
-                    else if(SS.brackets==0&&StringScan.startsWith(Com,"exit")){
-                            System.exit(0);
-                    }else
+                    else
                             ch=' ';
             }else if(ch=='f'){
                     if(Com.startsWith(Code_String.FOR+" ")){
@@ -241,12 +242,6 @@ public class interactive_Mode_Run {
                         System.out.println(Code_String.FINALLY+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
                     else
                             ch=' ';
-            }else if(ch=='h'){
-                    if(SS.brackets==0&&StringScan.startsWith(Com,"help")){
-                            System.out.println("您現在使用的是AShell互動式命令列界面，在本界面中您可以將程式碼一行一行的輸入，每輸入一行，AShell會幫您馬上處理好。\n"
-                                    +"另外，ver指令可以查看版本資訊，exit指令可以結束互動式命令列界面。");
-                    }else
-                            ch=' ';
             }else if(ch=='i'){
                     if(Com.startsWith(Code_String.IF+" ")){
                             int setIf=0;
@@ -311,16 +306,6 @@ public class interactive_Mode_Run {
                                          break;
                             }
                             ch=' ';
-                    }else
-                            ch=' ';
-            }else if(ch=='v'){
-                    if(SS.brackets==0&&StringScan.startsWith(Com,"ver")){
-                            System.out.println("    ___   _____ __         ____\n"
-                                +"   /   | / ___// /_  ___  / / /\n"
-                                +"  / /| | \\__ \\/ __ \\/ _ \\/ / /\n"
-                                +" / ___ |___/ / / / /  __/ / /\n"
-                                +"/_/  |_/____/_/ /_/\\___/_/_/ \n"
-                                +"(c)copyright 2017 jack850628 "+AS.getVar());
                     }else
                             ch=' ';
             }else if(ch=='w'){

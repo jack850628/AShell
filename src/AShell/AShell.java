@@ -101,7 +101,7 @@ public class AShell {
         return ValueArray;
     }
     public String getVar(){
-        return "Ver:1.1.8.1";
+        return "Ver:1.1.8.2";
     }
     private String Read(int mode){
         return read.Rand(mode);

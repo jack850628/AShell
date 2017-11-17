@@ -39,12 +39,12 @@ public class call_AShell {
         );
         if(args.length<=1||args[0].equals("false")){
             System.out.println("    ___   _____ __         ____\n"
-                                +"   /   | / ___// /_  ___  / / /\n"
-                                +"  / /| | \\__ \\/ __ \\/ _ \\/ / /\n"
-                                +" / ___ |___/ / / / /  __/ / /\n"
-                                +"/_/  |_/____/_/ /_/\\___/_/_/ \n"
-                                +"(c)copyright 2017 jack850628 "+AS.getVar()
-                                +"\n如果不知道如何使用，可以輸入'help'指令來查看用法:)\n");
+                              +"   /   | / ___// /_  ___  / / /\n"
+                              +"  / /| | \\__ \\/ __ \\/ _ \\/ / /\n"
+                              +" / ___ |___/ / / / /  __/ / /\n"
+                              +"/_/  |_/____/_/ /_/\\___/_/_/ \n"
+                              +"(c)copyright 2017 jack850628 "+AS.getVar()
+                              +"\n如果不知道如何使用，可以輸入'help'指令來查看用法:)\n");
              /*System.out.print("\n\n請按任意鍵結束. . .");
             CFunction.Cgetch();*/
              interactive_Mode_Run IMR=new interactive_Mode_Run(AS);
