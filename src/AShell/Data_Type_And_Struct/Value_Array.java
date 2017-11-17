@@ -59,8 +59,6 @@ public class Value_Array extends LinkedList<Value>{
             if(!value.Name.toString().matches("base|this|super"))
                 Memory_Management.Reference_person_NN(value.Tent.toString());//判斷所訂的值是不是記憶體參考
         });*/
-        if(Previous_Floor!=null)
-            Previous_Floor.clear();
         int classAndFunctionForThis=0;//在這個變數清單建立的函數數量
         synchronized(this){
             for(Value V:this){
@@ -85,6 +83,8 @@ public class Value_Array extends LinkedList<Value>{
                 UsingAndCallTable.clear();
             }
         }
+        if(Previous_Floor!=null)
+            Previous_Floor.clear();
     }
     /**
      * 具有垃圾回收能力的clear
