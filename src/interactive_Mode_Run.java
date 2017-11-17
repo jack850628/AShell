@@ -9,7 +9,7 @@ import AShell.Data_Type_And_Struct.Value_Array;
 public class interactive_Mode_Run {
     AShell AS;
     Value_Array ValueArray;
-    CommandArray command=new CommandArray();
+    CommandArray command=new CommandArray("<Stdin>");
     StringScan SS=new StringScan();//實例化空白、註解過濾器
     int LineNumbers=1;
     public interactive_Mode_Run(AShell AS){

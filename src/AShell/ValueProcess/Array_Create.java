@@ -181,7 +181,7 @@ public class Array_Create {
             }
         }
         //-----------------------------建立陣列大小函數-----------------------------------------------------------------------------
-        Function size=new Function(null);
+        Function size=new Function(null,"");
         size.CodeArray.add(new Command(new StringBuilder(Code_String.RETURN+" "+Element_Value.size()),0));
         VA.add(new Value(new StringBuilder("size"),Memory_Management.Function_Builder(size,1)));
         Memory_Management.set_Array_Sise(address.toString(), Element_Value.size());

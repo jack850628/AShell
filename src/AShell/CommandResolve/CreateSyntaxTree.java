@@ -23,7 +23,7 @@ public class CreateSyntaxTree {
                 }
             }else if(StringScan.startsWith(temp.toString(),Code_String.BEGIN)||temp.toString().startsWith(Code_String.IF+" ")||temp.toString().startsWith(Code_String.ELSEIF+" ")||StringScan.startsWith(temp.toString(),Code_String.ELSE)||temp.toString().startsWith(Code_String.FOR+" ")||
                     temp.toString().startsWith(Code_String.WHILE+" ")||StringScan.startsWith(temp.toString(),Code_String.DO)||StringScan.startsWith(temp.toString(),Code_String.TRY)||temp.toString().startsWith(Code_String.CATCH+" ")||StringScan.startsWith(temp.toString(),Code_String.FINALLY)){
-               CommandArray CA=new CommandArray();
+               CommandArray CA=new CommandArray(ComArray.fileName);
                 ComArray.get(i).setComArray(CA);
                 int con=0;
                 boolean loop=false;//這個變數為真的話，就代表著迴圈區塊中還包著其他的迴圈區塊

@@ -123,8 +123,8 @@ public class ResultsValue {
                 CensorValueReturn CVR;
                 Function fun = null;
                 Native_Function Java_Function = null;
-                Class_Type AShObject,Class;
                 if(Tent.toString().startsWith("AShell_C")){
+                    Class_Type AShObject,Class;
                     Class=Memory_Management.get_Class(Tent.toString());
                     AShObject=new Class_Type(Class.ValueArray);
                     AShObject.Parent=Class.Parent;
@@ -220,10 +220,10 @@ public class ResultsValue {
                 StringBuilder Memory=Memory_Management.Object_Builder(Parent_Class,1);//目前暫時創建父類別時把參照指數定為1，參照者為super變數
                 Parent_Class.ValueArray.add(new Value(new StringBuilder(Type_String.THIS),new StringBuilder(Memory)));
                 AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.SUPER),new StringBuilder(Memory)));
-                Function _inst_=new Function(AShObject.ValueArray.Reference());
+                Function _inst_=new Function(AShObject.ValueArray.Reference(),"");
                 _inst_.CodeArray.add(new Command(new StringBuilder(Type_String.SUPER+"."+Type_String.INSTANCE_FUNCTION_NAME+"()"),0));
                 AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.INSTANCE_FUNCTION_NAME),Memory_Management.Function_Builder(_inst_,1)));//放入預設的空建構子
-                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.DESTRUCTOR_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference()),1)));//放入預設的空建構子
+                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.DESTRUCTOR_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference(),""),1)));//放入預設的空解構子
                 Super(AS,RP,Parent_Class);//建立父類別的父類別
                 AS.Run_Function(Parent_Class.ValueArray,AShObject.Parent.CodeArray,RP);
                 for(int i=0;i<Parent_Class.ValueArray.size();i++){//繼承變數實做
@@ -235,8 +235,8 @@ public class ResultsValue {
                     }
                 }
             }else{//當沒有父類別時
-                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.INSTANCE_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference()),1)));//放入預設的空建構子
-                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.DESTRUCTOR_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference()),1)));//放入預設的空建構子
+                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.INSTANCE_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference(),""),1)));//放入預設的空建構子
+                AShObject.ValueArray.add(new Value(new StringBuilder(Type_String.DESTRUCTOR_FUNCTION_NAME),Memory_Management.Function_Builder(new Function(AShObject.ValueArray.Reference(),""),1)));//放入預設的空解構子
             }
         }
         
@@ -326,7 +326,7 @@ public class ResultsValue {
                                     if(j%ArraySpecification.get(i)==0){//如果這是該維陣列的第一個元素
                                         //-----------------------------建立陣列大小函數-----------------------------------------------------------------------------
                                         Value_Array VA = new Value_Array(null);
-                                        Function size=new Function(null);
+                                        Function size=new Function(null,"");
                                         size.CodeArray.add(new Command(new StringBuilder(Code_String.RETURN+" "+ArraySpecification.get(i)),0));
                                         VA.add(new Value(new StringBuilder("size"),Memory_Management.Function_Builder(size,1)));
                                         //------------------------------------------------------------------------------------------------------------------------------------

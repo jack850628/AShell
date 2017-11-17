@@ -80,7 +80,7 @@ public class AShell {
         //----------------------------------------------將參數主類別加入記憶體清單中----------------------------------------------------//
         if(args!=null){
             Value_Array VA = new Value_Array(null);//第一維陣列的第一個元素的變數清單，主要用來存放size函數
-            Function size=new Function(null);
+            Function size=new Function(null,"");
             size.CodeArray.add(new Command(new StringBuilder(Code_String.RETURN+" "+args.length),0));
             VA.add(new Value(new StringBuilder("size"),Memory_Management.Function_Builder(size,1)));
             AShellArgs=Memory_Management.Array_Builder(null,StringScan.to_AShell_String(args[0]),VA,1);
@@ -146,19 +146,19 @@ public class AShell {
            throw new AShellException(run.SESC);
        return run.SESC.Message;   
     }
-   public void Start_Run( File fileNane){
+   public void Start_Run( File fileName){
        try{
-             RuningPath.append(fileNane.getParent());
-             CallSystem.chdir(fileNane.getParent());
+             RuningPath.append(fileName.getParent());
+             CallSystem.chdir(fileName.getParent());
        }catch(Exception e){
            error.Error("發生錯誤！"+e.getMessage()+"\n");
            print.Print("請按任意鍵結束...");
            Read(1);
        }
        Run_Point RP = new Run_Point();
-       CommandArray command=new CommandArray();
+       CommandArray command=new CommandArray(fileName.getName());
        command.add(new Command(new StringBuilder("using Stdio.ash"),0));
-       command.add(new Command(new StringBuilder("call "+fileNane.getName()),0));
+       command.add(new Command(new StringBuilder("call "+fileName.getName()),0));
        Run run=new Run(ValueArray,command,RP);
            //RP.Run=run;這動作在建構式裡已經做過了
        run.NotIsFunction=true;
@@ -247,7 +247,7 @@ public class AShell {
                                 if(!ValueArray.UsingAndCallTable.contains(FileName.toString()))
                                     if(new File(FileName.toString()).isFile()){
                                         ValueArray.UsingAndCallTable.add(FileName.toString());
-                                        Run run=new Run(new FileReader(FileName.toString()),RP,ValueArray/*,false*/);
+                                        Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),RP,ValueArray/*,false*/);
                                         run.start();
                                         //if(r!=null){
                                             synchronized(Thread){
@@ -390,7 +390,7 @@ public class AShell {
                                     if(!ValueArray.UsingAndCallTable.contains(FileName.toString())){
                                         if(new File(FileName.toString()).isFile()){
                                             ValueArray.UsingAndCallTable.add(FileName.toString());
-                                            Run run=new Run(new FileReader(FileName.toString()),RP,ValueArray/*,false*/);
+                                            Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),RP,ValueArray/*,false*/);
                                             run.start();
                                             //if(r!=null){
                                                 synchronized(Thread){
@@ -452,10 +452,10 @@ public class AShell {
             }
         }
         public Run_Point Thread_Run(Value_Array ValueArray){//產生新的AShell執行續
-            CommandArray command=new CommandArray();
+             Run_Point RP=new Run_Point();
+            CommandArray command=new CommandArray("Thread"+RP.index);
             //command.add(new CommandArray(new StringBuilder("Stdio.println(\"\\n\\nLog: \".."+Type_String.THIS+".run)")));
              command.add(new Command(new StringBuilder("run()"),0));
-             Run_Point RP=new Run_Point();
              Run run=new Run(ValueArray,command,RP);
              run.NotIsFunction=true;//設定為非函數執行狀態
              RP.Run=run;
@@ -487,10 +487,11 @@ public class AShell {
         }
         static class try_Count {
             public static enum State{Break,Continue,Tag,Exception,Return,None};//區塊結束狀態碼的所有狀態
-            void set_Try(String Code,int LineNumbers,String Message){
+            void set_Try(String Code,int LineNumbers,String fileName,String Message){
                     this.state=State.Exception;
                     this.Code=Code;
                     this.LineNumbers=LineNumbers;
+                    this.fileName=fileName;
                     this.Message=StringScan.Auto_Type_Change(Message).toString();
             }
             void set_Returm(String Message){
@@ -521,6 +522,7 @@ public class AShell {
             String Code;//發生錯誤的程式碼
             //int Index;//當遇到tag時儲存Tag中的跳轉程式碼行數
             int LineNumbers;//發生錯誤的程式碼的行數
+            String fileName;//發生錯誤的程式碼所在的檔案名稱
         }
         static class If_Count {
             public If_Count(int ifc){//這個是IF的狀態紀錄，用來記錄IF下面哪一段指令需要執行與跳過
@@ -535,7 +537,7 @@ public class AShell {
                 //ArrayList<try_Count> tryArray=new ArrayList<>();//try的堆疊，用來存放被執行到的TRY的狀態
 		//ArrayList<WhileC> whileArray=new ArrayList<>();//While的堆疊，用來存放被執行到的While的狀態
 		//ArrayList<WhileC> dowhileArray=new ArrayList<>();//Do-While的堆疊，用來存放被執行到的Do-While的狀態
-		CommandArray command =new CommandArray();//用來存放讀出的批次指令
+		CommandArray command;//用來存放讀出的批次指令
 		//ArrayList<Integer> LoopCount=new ArrayList<>();//迴圈型態堆疊，紀錄當前所執行的迴圈型態(0是IF，1是WHILE，2是DO-DWHILE)
                 Com com;
                 Run_Point RP=null;
@@ -545,10 +547,11 @@ public class AShell {
                 //boolean isNpcall=false;//判斷執行續是不是用npcall指令創造
                 //int setFun=0;//函數淵告判斷值，0為沒再宣告，1為宣告中，1以上為宣告函數中的函數
                 //int funidx;//函數指數，用來記錄現在宣告中的函數在變數陣列中的位置
-                public Run(FileReader fr,Run_Point RP,Value_Array ValueArray/*,boolean isNpcall*/) throws IOException, Exception{
+                public Run(FileReader fr,String fileName,Run_Point RP,Value_Array ValueArray/*,boolean isNpcall*/) throws IOException, Exception{
                         NotIsFunction=true;
                         this.ValueArray=ValueArray;
                         StringScan SS=new StringScan();//實例化空白、註解過濾器
+                        command=new CommandArray(fileName);
                         try (BufferedReader br = new BufferedReader(fr)) {
                             String s;
                             StringBuilder Com;
@@ -739,13 +742,13 @@ public class AShell {
                                                 Run_Begin_or_If_or_Try_or_Catch_or_Finally(false,null,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 //System.err.println("LOG: "+Return);
                                                 if(SESC.state==SubEndStateCode.State.Break)
-                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
+                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
                                                 else if(SESC.state==SubEndStateCode.State.Continue)
-                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
+                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
                                                 else if(SESC.state==SubEndStateCode.State.Tag){
                                                     Try.set_Tag(SESC.Message);
                                                 }else if(SESC.state==SubEndStateCode.State.Exception)
-                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                 else if(SESC.state==SubEndStateCode.State.Return)
                                                     Try.set_Returm(SESC.Message);
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CATCH+" ")){
@@ -754,37 +757,37 @@ public class AShell {
                                                     Run_Begin_or_If_or_Try_or_Catch_or_Finally(true,command.get(ComLenght).Command.substring(Code_String.CATCH.length()+1).trim()+"="+Try.Message
                                                             ,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                     if(SESC.state==SubEndStateCode.State.Break)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
                                                     else if(SESC.state==SubEndStateCode.State.Tag)
                                                         Try.set_Tag(SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Exception)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                         Try.set_Returm(SESC.Message);
                                                 }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.FINALLY)){
                                                     Run_Begin_or_If_or_Try_or_Catch_or_Finally(false,null,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                     if(SESC.state==SubEndStateCode.State.Break)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.BREAK+"指令");
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,"非迴圈區塊不可以使用"+Code_String.CONTINUE+"指令");
                                                     else if(SESC.state==SubEndStateCode.State.Tag){
                                                         Try.set_Tag(SESC.Message);
                                                     }else if(SESC.state==SubEndStateCode.State.Exception)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                         Try.set_Returm(SESC.Message);
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDTR)){
                                                 if(Try.state==try_Count.State.Exception){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers,SESC.fileName, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
                                                     throw new Exception(SESC.Message);
                                                 }else if(Try.state==try_Count.State.Return){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,SESC.fileName, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
                                                     break;
                                                 }else if(Try.state==try_Count.State.Tag){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,SESC.fileName, Type_String.NULL);
                                                     int Number=getTag(command,Try.Message);
                                                     if(Number==-2)
                                                         throw new Exception("標籤\""+Try.Message+"\"未宣告。");
@@ -859,7 +862,7 @@ public class AShell {
                                             ComLenght=Number;
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                                             FunctionNameResolve FNR=new FunctionNameResolve(command.get(ComLenght).Command.substring(Code_String.FUNCTION.length()+1).trim());
-                                            Function fun=new Function(ValueArray.Reference());
+                                            Function fun=new Function(ValueArray.Reference(),command.fileName);
                                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
                                             for(StringBuilder parameter: FNR.Args){//建立函數參數
@@ -909,8 +912,8 @@ public class AShell {
                                                 Class.Parent=RPS.Parent;
                                                 Class.ParentAddress=RPS.ParentAddress;
                                             }
-                                            Class.CodeArray=new CommandArray();
-                                            CommandArray SCA=new CommandArray();
+                                            Class.CodeArray=new CommandArray(command.fileName);
+                                            CommandArray SCA=new CommandArray(command.fileName);
                                             while(true){
                                                 ComLenght++;
                                                 if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
@@ -947,7 +950,7 @@ public class AShell {
                                             Run_Function(Class.ValueArray,SCA,RP);
 				    }else if(StringScan.startsWith_for_return(command.get(ComLenght).Command.toString(),Code_String.RETURN)){
                                         String Return=new VarStrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.RETURN.length()).trim(),ValueArray,VarMode.Mode.Intermediary).Str.toString();
-                                        SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, (!Return.equals(""))?Return:Type_String.NULL);
+                                        SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,command.fileName, (!Return.equals(""))?Return:Type_String.NULL);
                                         break;
 				    }else{//如果沒在執行或正在執行IF回迴圈且當下指向條件為1(無須跳過，0為須要跳過)則執行
                                                 //System.out.println("呼叫一般指令("+command.get(ComLenght)+")開始:"+(System.currentTimeMillis()-sLog));
@@ -956,10 +959,10 @@ public class AShell {
                                                     //System.out.println("呼叫一般指令("+command.get(ComLenght)+")結束:"+(System.currentTimeMillis()-sLog));
                                     }
 				}catch (final AShellException e){//接收傳送從函數拋出的錯誤
-                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers, e.SESC.Message);
+                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers,e.SESC.fileName, e.SESC.Message);
                                     if(NotIsFunction){//當執行續不是函數的時
                                         Stop();
-                                        error.Error("錯誤！程式碼第"+SESC.LineNumbers+"行:"+SESC.Code+"中，"+e.getMessage()+"\n");
+                                        error.Error("錯誤！檔案"+SESC.fileName+"裡，程式碼第"+SESC.LineNumbers+"行:"+SESC.Code+"中，"+e.getMessage()+"\n");
                                         if(!interactiveMode){
                                             print.Print("請按任意鍵結束...");
                                             Read(1);
@@ -971,9 +974,9 @@ public class AShell {
                                     if(NotIsFunction){//當執行續不是函數的時
                                         Stop();
                                         if(SESC.Main)
-                                            error.Error("錯誤！程式碼第"+command.get(ComLenght).LineNumbers+"行:"+command.get(ComLenght).Command.toString()+"中，"+e.getMessage()+"\n");
+                                            error.Error("錯誤！檔案"+command.fileName+"裡，程式碼第"+command.get(ComLenght).LineNumbers+"行:"+command.get(ComLenght).Command.toString()+"中，"+e.getMessage()+"\n");
                                         else
-                                            error.Error("錯誤！程式碼第"+SESC.LineNumbers+"行:"+SESC.Code+"中，"+e.getMessage()+"\n");
+                                            error.Error("錯誤！檔案"+SESC.fileName+"裡，程式碼第"+SESC.LineNumbers+"行:"+SESC.Code+"中，"+e.getMessage()+"\n");
                                         if(!interactiveMode){
                                             print.Print("請按任意鍵結束...");
                                             Read(1);
@@ -981,7 +984,7 @@ public class AShell {
                                         stop.Stop();
                                     }else{//當執行續是函數的時
                                         if(SESC.state!=SubEndStateCode.State.Exception)
-                                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, e.getMessage());
+                                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                         break;
                                     }
                                 }
@@ -1037,7 +1040,7 @@ public class AShell {
                         try {
                             com.command(ValueArray);
                         } catch (Exception e) {
-                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Code_String.CATCH+" "+Exception_Value,0, e.getMessage());
+                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Code_String.CATCH+" "+Exception_Value,0,command.fileName, e.getMessage());
                             return;
                         }
                     }
@@ -1046,7 +1049,7 @@ public class AShell {
                     for(int ComLenght=0;ComLenght<command.size();ComLenght++){
                                 if(!RP.RunState){
                                         ValueArray.clear();
-                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
+                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName, Type_String.NULL);
 					return;
                                 }
 				try{
@@ -1122,7 +1125,7 @@ public class AShell {
                                                 else if(SESC.state==SubEndStateCode.State.Continue)
                                                         Try.set_Continue();
                                                 else if(SESC.state==SubEndStateCode.State.Exception)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                 else if(SESC.state==SubEndStateCode.State.Return)
                                                         Try.set_Returm(SESC.Message);
                                                 else if(SESC.state==SubEndStateCode.State.Tag)
@@ -1137,7 +1140,7 @@ public class AShell {
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
                                                             Try.set_Continue();
                                                     else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                             Try.set_Returm(SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Tag)
@@ -1150,41 +1153,46 @@ public class AShell {
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
                                                             Try.set_Continue();
                                                     else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                             Try.set_Returm(SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Tag)
                                                             Try.set_Tag(SESC.Message);
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDTR)){
-                                                if(Try.state==try_Count.State.Exception){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
-                                                    ValueArray.clear();
-                                                    return;
-                                                }else if(Try.state==try_Count.State.Return){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
-                                                    ValueArray.clear();
-                                                    return;
-                                                }else if(Try.state==try_Count.State.Tag){
-                                                    int Number=getTag(command,Try.Message);
-                                                    if(Number==-2){
-                                                        ValueArray.clear();
-                                                        SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Try.Message);
-                                                        return;
+                                                if(null!=Try.state)
+                                                    switch (Try.state) {
+                                                        case Exception:
+                                                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers,Try.fileName, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
+                                                            ValueArray.clear();
+                                                            return;
+                                                        case Return:
+                                                            SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,Try.fileName, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
+                                                            ValueArray.clear();
+                                                            return;
+                                                        case Tag:
+                                                            int Number=getTag(command,Try.Message);
+                                                            if(Number==-2){
+                                                                ValueArray.clear();
+                                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Try.Message);
+                                                                return;
+                                                            }
+                                                            ComLenght=Number;
+                                                            SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Type_String.NULL);
+                                                            break;
+                                                        case Break:
+                                                            SESC.setSubEndStateCode(SubEndStateCode.State.Break, null,0,Try.fileName, null);
+                                                            ValueArray.clear();
+                                                            return;
+                                                        case Continue:
+                                                            SESC.setSubEndStateCode(SubEndStateCode.State.Continue, null,0,Try.fileName, null);
+                                                            ValueArray.clear();
+                                                            return;
+                                                        default:
+                                                            break;
                                                     }
-                                                    ComLenght=Number;
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Type_String.NULL);
-                                                }else if(Try.state==try_Count.State.Break){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Break, null,0, null);
-                                                    ValueArray.clear();
-                                                    return;
-                                                }else if(Try.state==try_Count.State.Continue){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Continue, null,0, null);
-                                                    ValueArray.clear();
-                                                    return;
-                                                }
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 return;
@@ -1237,24 +1245,24 @@ public class AShell {
                                                                 }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Break, null,0, null);
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Break, null,0,command.fileName, null);
 						return;
 				    }else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.CONTINUE)){
                                                 ValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Continue, null,0, null);
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Continue, null,0,command.fileName, null);
 						return;
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.GOTO+" ")){
                                             int Number=getTag(command,command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                             if(Number==-2){
                                                 ValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
                                             ComLenght=Number;
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                                             FunctionNameResolve FNR=new FunctionNameResolve(command.get(ComLenght).Command.substring(Code_String.FUNCTION.length()+1).trim());
-                                            Function fun=new Function(ValueArray.Reference());
+                                            Function fun=new Function(ValueArray.Reference(),command.fileName);
                                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
                                             for(StringBuilder parameter: FNR.Args){//建立函數參數
@@ -1304,8 +1312,8 @@ public class AShell {
                                                 Class.Parent=RPS.Parent;
                                                 Class.ParentAddress=RPS.ParentAddress;
                                             }
-                                            Class.CodeArray=new CommandArray();
-                                            CommandArray SCA=new CommandArray();
+                                            Class.CodeArray=new CommandArray(command.fileName);
+                                            CommandArray SCA=new CommandArray(command.fileName);
                                             while(true){
                                                 ComLenght++;
                                                 if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
@@ -1341,7 +1349,7 @@ public class AShell {
                                             CreateSyntaxTree.CST(SCA);
                                             Run_Function(Class.ValueArray,SCA,RP);
 				    }else if(StringScan.startsWith_for_return(command.get(ComLenght).Command.toString(),Code_String.RETURN)){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,command.fileName, 
                                                         new VarStrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.RETURN.length()).trim(),ValueArray,VarMode.Mode.Intermediary).Str.toString());
                                                 ValueArray.clear();
                                                 return;
@@ -1353,16 +1361,16 @@ public class AShell {
                                     }
 				}catch (final AShellException e){
                                     ValueArray.clear();
-                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers, e.SESC.Message);
+                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers,e.SESC.fileName, e.SESC.Message);
                                     return;
                                 }catch (final Exception e) {
                                     ValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
                     ValueArray.clear();
-                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName,Type_String.NULL);
                 }
                 //while以及for執行用函數
                 /**
@@ -1388,7 +1396,7 @@ public class AShell {
 				if(!RP.RunState){
                                         ValueArray.clear();
                                         JudgmentAreaValueArray.clear();
-                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName,Type_String.NULL);
 					return;
                                 }
 				try{
@@ -1399,7 +1407,7 @@ public class AShell {
 						if(SESC.state==SubEndStateCode.State.Break){
                                                         ValueArray.clear();
                                                         JudgmentAreaValueArray.clear();
-                                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                         return;
                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                         break;
@@ -1423,7 +1431,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1451,7 +1459,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1475,7 +1483,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1502,7 +1510,7 @@ public class AShell {
                                                 else if(SESC.state==SubEndStateCode.State.Continue)
                                                         Try.set_Continue();
                                                 else if(SESC.state==SubEndStateCode.State.Exception)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                 else if(SESC.state==SubEndStateCode.State.Return)
                                                         Try.set_Returm(SESC.Message);
                                                 else if(SESC.state==SubEndStateCode.State.Tag)
@@ -1517,7 +1525,7 @@ public class AShell {
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
                                                             Try.set_Continue();
                                                     else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                             Try.set_Returm(SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Tag)
@@ -1530,19 +1538,19 @@ public class AShell {
                                                     else if(SESC.state==SubEndStateCode.State.Continue)
                                                             Try.set_Continue();
                                                     else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
+                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Return)
                                                             Try.set_Returm(SESC.Message);
                                                     else if(SESC.state==SubEndStateCode.State.Tag)
                                                             Try.set_Tag(SESC.Message);
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDTR)){
                                                 if(Try.state==try_Count.State.Exception){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers,Try.fileName, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
                                                 }else if(Try.state==try_Count.State.Return){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,Try.fileName, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1551,13 +1559,13 @@ public class AShell {
                                                     if(Number==-2){
                                                         ValueArray.clear();
                                                         JudgmentAreaValueArray.clear();
-                                                        SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Try.Message);
+                                                        SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Try.Message);
                                                         return;
                                                     }
                                                     ComLenght=Number;
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Type_String.NULL);
                                                 }else if(Try.state==try_Count.State.Break){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL); 
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Try.fileName,Type_String.NULL); 
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1565,7 +1573,7 @@ public class AShell {
                                                     break;
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -1626,7 +1634,7 @@ public class AShell {
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName, Type_String.NULL);
 						return;
 				    }else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.CONTINUE))
 						break;
@@ -1635,14 +1643,14 @@ public class AShell {
                                             if(Number==-2){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
                                             ComLenght=Number;
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                                             FunctionNameResolve FNR=new FunctionNameResolve(command.get(ComLenght).Command.substring(Code_String.FUNCTION.length()+1).trim());
-                                            Function fun=new Function(ValueArray.Reference());
+                                            Function fun=new Function(ValueArray.Reference(),command.fileName);
                                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
                                             for(StringBuilder parameter: FNR.Args){//建立函數參數
@@ -1692,8 +1700,8 @@ public class AShell {
                                                 Class.Parent=RPS.Parent;
                                                 Class.ParentAddress=RPS.ParentAddress;
                                             }
-                                            Class.CodeArray=new CommandArray();
-                                            CommandArray SCA=new CommandArray();
+                                            Class.CodeArray=new CommandArray(command.fileName);
+                                            CommandArray SCA=new CommandArray(command.fileName);
                                             while(true){
                                                 ComLenght++;
                                                 if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
@@ -1729,7 +1737,7 @@ public class AShell {
                                             CreateSyntaxTree.CST(SCA);
                                             Run_Function(Class.ValueArray,SCA,RP);
 				    }else if(StringScan.startsWith_for_return(command.get(ComLenght).Command.toString(),Code_String.RETURN)){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,command.fileName, 
                                                         new VarStrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.RETURN.length()).trim(),ValueArray,VarMode.Mode.Intermediary).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -1743,12 +1751,12 @@ public class AShell {
 				}catch (final AShellException e){
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers, e.SESC.Message);
+                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers,e.SESC.fileName, e.SESC.Message);
                                     return;
                                 }catch (final Exception e) {
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
@@ -1759,7 +1767,7 @@ public class AShell {
                         ValueArray.clear();
                     }
                     JudgmentAreaValueArray.clear();
-                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
+                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName, Type_String.NULL);
                 }
                 //dwhile執行用函數
                 /**
@@ -1778,7 +1786,7 @@ public class AShell {
 				if(!RP.RunState){
                                         ValueArray.clear();
                                         JudgmentAreaValueArray.clear();
-                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName,Type_String.NULL);
 					return;
                                 }
 				try{
@@ -1789,7 +1797,7 @@ public class AShell {
 						if(SESC.state==SubEndStateCode.State.Break){
                                                         ValueArray.clear();
                                                         JudgmentAreaValueArray.clear();
-                                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                        SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                         return;
                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                         break;
@@ -1813,7 +1821,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1841,7 +1849,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1865,7 +1873,7 @@ public class AShell {
                                                                 if(SESC.state==SubEndStateCode.State.Break){
                                                                     ValueArray.clear();
                                                                     JudgmentAreaValueArray.clear();
-                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL);
+                                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,SESC.fileName,Type_String.NULL);
                                                                     return;
                                                                 }else if(SESC.state==SubEndStateCode.State.Continue)
                                                                     break;
@@ -1887,52 +1895,82 @@ public class AShell {
 						IfState.ifc=-1;
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.TRY)){
                                                 Run_Begin_or_If_or_Try_or_Catch_or_Finally(false,null,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                if(SESC.state==SubEndStateCode.State.Break)
-                                                        Try.set_Break();
-                                                else if(SESC.state==SubEndStateCode.State.Continue)
-                                                        Try.set_Continue();
-                                                else if(SESC.state==SubEndStateCode.State.Exception)
-                                                        Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
-                                                else if(SESC.state==SubEndStateCode.State.Return)
-                                                        Try.set_Returm(SESC.Message);
-                                                else if(SESC.state==SubEndStateCode.State.Tag)
-                                                        Try.set_Tag(SESC.Message);
+                                                if(null!=SESC.state)
+                                                        switch (SESC.state) {
+                                                            case Break:
+                                                                Try.set_Break();
+                                                                break;
+                                                            case Continue:
+                                                                Try.set_Continue();
+                                                                break;
+                                                            case Exception:
+                                                                Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
+                                                                break;
+                                                            case Return:
+                                                                Try.set_Returm(SESC.Message);
+                                                                break;
+                                                            case Tag:
+                                                                Try.set_Tag(SESC.Message);
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CATCH+" ")){
                                                 if(Try.state==try_Count.State.Exception){
                                                     Try.state=try_Count.State.None;
                                                     Run_Begin_or_If_or_Try_or_Catch_or_Finally(true,command.get(ComLenght).Command.substring(Code_String.CATCH.length()+1).trim()+"="+Try.Message
                                                             ,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                    if(SESC.state==SubEndStateCode.State.Break)
-                                                            Try.set_Break();
-                                                    else if(SESC.state==SubEndStateCode.State.Continue)
-                                                            Try.set_Continue();
-                                                    else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
-                                                    else if(SESC.state==SubEndStateCode.State.Return)
-                                                            Try.set_Returm(SESC.Message);
-                                                    else if(SESC.state==SubEndStateCode.State.Tag)
-                                                            Try.set_Tag(SESC.Message);
-                                                }
+                                                    if(null!=SESC.state)
+                                                            switch (SESC.state) {
+                                                                case Break:
+                                                                    Try.set_Break();
+                                                                    break;
+                                                                case Continue:
+                                                                    Try.set_Continue();
+                                                                    break;
+                                                                case Exception:
+                                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
+                                                                    break;
+                                                                case Return:
+                                                                    Try.set_Returm(SESC.Message);
+                                                                    break;
+                                                                case Tag:
+                                                                    Try.set_Tag(SESC.Message);
+                                                                    break;
+                                                                default:
+                                                                    break;
+                                                            }
+                                                        }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.FINALLY)){
                                                 Run_Begin_or_If_or_Try_or_Catch_or_Finally(false,null,new Value_Array(ValueArray),command.get(ComLenght).ComArray);
-                                                    if(SESC.state==SubEndStateCode.State.Break)
-                                                            Try.set_Break();
-                                                    else if(SESC.state==SubEndStateCode.State.Continue)
-                                                            Try.set_Continue();
-                                                    else if(SESC.state==SubEndStateCode.State.Exception)
-                                                            Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.Message);
-                                                    else if(SESC.state==SubEndStateCode.State.Return)
-                                                            Try.set_Returm(SESC.Message);
-                                                    else if(SESC.state==SubEndStateCode.State.Tag)
-                                                            Try.set_Tag(SESC.Message);
+                                                    if(null!=SESC.state)
+                                                            switch (SESC.state) {
+                                                                case Break:
+                                                                    Try.set_Break();
+                                                                    break;
+                                                                case Continue:
+                                                                    Try.set_Continue();
+                                                                    break;
+                                                                case Exception:
+                                                                    Try.set_Try(SESC.Code,SESC.LineNumbers,SESC.fileName,SESC.Message);
+                                                                    break;
+                                                                case Return:
+                                                                    Try.set_Returm(SESC.Message);
+                                                                    break;
+                                                                case Tag:
+                                                                    Try.set_Tag(SESC.Message);
+                                                                    break;
+                                                                default:
+                                                                    break;
+                                                            }
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDTR)){
                                                 if(Try.state==try_Count.State.Exception){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, Try.Code,Try.LineNumbers,Try.fileName, new StrDW(AShell.this,RP,Try.Message,ValueArray).Str.toString());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
                                                 }else if(Try.state==try_Count.State.Return){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,Try.fileName, (!Try.Message.equals(""))?Try.Message:Type_String.NULL);
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1941,13 +1979,13 @@ public class AShell {
                                                     if(Number==-2){
                                                         ValueArray.clear();
                                                         JudgmentAreaValueArray.clear();
-                                                        SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Try.Message);
+                                                        SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Try.Message);
                                                         return;
                                                     }
                                                     ComLenght=Number;
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0, Type_String.NULL);
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Tag, null,0,Try.fileName, Type_String.NULL);
                                                 }else if(Try.state==try_Count.State.Break){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Type_String.NULL); 
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,Try.fileName,Type_String.NULL); 
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1955,7 +1993,7 @@ public class AShell {
                                                     break;
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -2016,7 +2054,7 @@ public class AShell {
 					}else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.BREAK)){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName, Type_String.NULL);
 						return;
 				    }else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.CONTINUE))
 						break;
@@ -2025,14 +2063,14 @@ public class AShell {
                                             if(Number==-2){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
                                             ComLenght=Number;
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                                             FunctionNameResolve FNR=new FunctionNameResolve(command.get(ComLenght).Command.substring(Code_String.FUNCTION.length()+1).trim());
-                                            Function fun=new Function(ValueArray.Reference());
+                                            Function fun=new Function(ValueArray.Reference(),command.fileName);
                                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
                                             for(StringBuilder parameter: FNR.Args){//建立函數參數
@@ -2082,8 +2120,8 @@ public class AShell {
                                                 Class.Parent=RPS.Parent;
                                                 Class.ParentAddress=RPS.ParentAddress;
                                             }
-                                            Class.CodeArray=new CommandArray();
-                                            CommandArray SCA=new CommandArray();
+                                            Class.CodeArray=new CommandArray(command.fileName);
+                                            CommandArray SCA=new CommandArray(command.fileName);
                                             while(true){
                                                 ComLenght++;
                                                 if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
@@ -2119,7 +2157,7 @@ public class AShell {
                                             CreateSyntaxTree.CST(SCA);
                                             Run_Function(Class.ValueArray,SCA,RP);
 				    }else if(StringScan.startsWith_for_return(command.get(ComLenght).Command.toString(),Code_String.RETURN)){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Return, null,0,command.fileName, 
                                                         new VarStrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.RETURN.length()).trim(),ValueArray,VarMode.Mode.Intermediary).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -2133,19 +2171,19 @@ public class AShell {
 				}catch (final AShellException e){
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers, e.SESC.Message);
+                                    SESC.setSubEndStateCode(e.SESC.state, e.SESC.Code,e.SESC.LineNumbers,e.SESC.fileName, e.SESC.Message);
                                     return;
                                 }catch (final Exception e) {
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
                         ValueArray.clear();
                     }while(new VarStrDW(AShell.this,RP,Boolean,JudgmentAreaValueArray,VarMode.Mode.Intermediary).Str.toString().matches(Type_String.TRUE+"|1"));
                     JudgmentAreaValueArray.clear();
-                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0, Type_String.NULL);
+                    SESC.setSubEndStateCode(SubEndStateCode.State.End, null,0,command.fileName, Type_String.NULL);
                 }
 	}
 }
