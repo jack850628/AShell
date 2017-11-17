@@ -18,7 +18,7 @@ public class AShell_InteractiveModeFunction {
     public static AShellType help(AShell_this AShThis,AShellType[] Args) throws Exception{
         System.out.println("您現在使用的是AShell互動式命令列界面，在本界面中您可以將程式碼一行一行的輸入，每輸入一行，AShell會幫您馬上處理好，\n"
                           +"語法說明可以參考:http://blog.xuite.net/supmart/blog/429774559。\n"
-                          +"另外，ver指令可以查看版本資訊，exit指令可以結束互動式命令列界面。");
+                          +"另外，ver指令可以查看版本資訊，exit()可以結束互動式命令列界面。");
         return new AShellType();
     }
     public static AShellType ver(AShell_this AShThis,AShellType[] Args) throws Exception{
