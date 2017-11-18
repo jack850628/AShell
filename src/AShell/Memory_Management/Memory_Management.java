@@ -829,6 +829,8 @@ public class Memory_Management {
             Function_Memory_Type AFunction=M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
             AFunction.Obj.ValueArray.clear();
             AFunction.Obj.CodeArray.clear();
+            if(AFunction.Obj.Closure_ValueArray!=null)
+                AFunction.Obj.Closure_ValueArray.clear();
             synchronized(Function_Memory){
                 Function_Memory.remove(AFunction);
             }
