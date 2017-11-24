@@ -766,12 +766,13 @@ public class Memory_Management {
                     if(AShell_Object instanceof Class_Memory_Type){
                         Class_Memory_Type ASClass=(Class_Memory_Type)AShell_Object;
                         if(ASClass.Obj.CodeArray==null){//判斷是靜態類別還是動態類別，當Class_Type.ValueArray為null時就表示為動態類別
+                            /*物件回收有嚴重錯誤，暫時停用
                             if(!ASClass.Obj.ValueArray.isEmpty())//如果還沒被回收
                                 try {
                                     ClassRemove(AS,RP,ASClass,true);
                                 } catch (Exception ex) {
                                     //System.err.println(ex.getMessage());
-                                }
+                                }*/
                         }else{
                             ASClass.Obj.CodeArray.clear();
                             ASClass.Obj.ValueArray.clear();
@@ -829,6 +830,8 @@ public class Memory_Management {
             Function_Memory_Type AFunction=M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
             AFunction.Obj.ValueArray.clear();
             AFunction.Obj.CodeArray.clear();
+            if(AFunction.Obj.Closure_ValueArray!=null)
+                AFunction.Obj.Closure_ValueArray.clear();
             synchronized(Function_Memory){
                 Function_Memory.remove(AFunction);
             }

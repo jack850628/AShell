@@ -35,6 +35,7 @@ public class ResultsValue {
 		if(!Variable.toString().matches("|"+Type_String.ASHELL_TYPE)){
                     while(ValueArray!=null){
                         for(int i=0;i<ValueArray.size();i++){
+                            //System.err.println(ValueArray.hashCode()+" : "+ValueArray.get(i).Name);
                                 if(ValueArray.get(i).Name.toString().equals(Variable.toString())){
                                         if(Original)
                                                 return ValueArray.get(i).Tent;
