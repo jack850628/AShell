@@ -161,6 +161,8 @@ public class AShell {
        command.add(new Command(new StringBuilder("call "+fileName.getName()),0));
        Run run=new Run(ValueArray,command,RP);
            //RP.Run=run;這動作在建構式裡已經做過了
+       run.scriptPath=RuningPath.toString();
+       run.com.scriptPath=run.scriptPath;
        run.NotIsFunction=true;
        ThreadList.add(RP);
        run.start();
@@ -180,6 +182,8 @@ public class AShell {
            Run_Point RP = new Run_Point();
 	   Run run=new Run(ValueArray,command,RP);
            //RP.Run=run;這動作在建構式裡已經做過了
+           run.scriptPath=RuningPath.toString();
+           run.com.scriptPath=run.scriptPath;
 	   run.NotIsFunction=true;
            ThreadList.add(RP);
            run.start();
@@ -189,9 +193,11 @@ public class AShell {
         Run_Point RP;
         public Run Thread=null; 
         private String com;
+        String scriptPath;//腳本所在路徑
        /**將執行續傳入Eview的方法
 	 * @param r：現在執行的執行序**/
-	public Com(Run_Point RP,Run Thread,Value_Array ValueArray){
+	public Com(String scriptPath,Run_Point RP,Run Thread,Value_Array ValueArray){
+                this.scriptPath=scriptPath;
                 this.RP=RP;
                 this.ValueArray=ValueArray;
 		this.Thread=Thread;
@@ -241,13 +247,16 @@ public class AShell {
                             break;
                         case 'c':
                             if(getText().startsWith(Code_String.CALL+" ")){
-                                StringBuilder FileName=new StringBuilder(RuningPath).append(PathType).append(getText().substring(Code_String.CALL.length()+1).trim());
+                                if(scriptPath==null)//當scriptPath為null就代表呼叫cll的地方不再腳本區塊的最外層
+                                    throw new Exception("函數或類別中不可以使用call。");
+                                StringBuilder FileName=new StringBuilder(scriptPath).append(PathType).append(getText().substring(Code_String.CALL.length()+1).trim());
                                 if(FileName.length()<4||!FileName.substring(FileName.length()-4, FileName.length()).equals(".ash"))
                                     FileName.append(".ash");
-                                if(!ValueArray.UsingAndCallTable.contains(FileName.toString()))
-                                    if(new File(FileName.toString()).isFile()){
+                                if(!ValueArray.UsingAndCallTable.contains(FileName.toString())){
+                                    File scriptFile=new File(FileName.toString());
+                                    if(scriptFile.isFile()){
                                         ValueArray.UsingAndCallTable.add(FileName.toString());
-                                        Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),RP,ValueArray/*,false*/);
+                                        Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),scriptFile.getParent(),RP,ValueArray/*,false*/);
                                         run.start();
                                         //if(r!=null){
                                             synchronized(Thread){
@@ -261,6 +270,7 @@ public class AShell {
                                         }*/
                                     }else
                                         throw new Exception("未發現檔名為'"+getText().substring(Code_String.CALL.length()+1).trim()+"'的腳本檔。");
+                                }
                             }else
                                 ch=' ';
                             break;
@@ -388,9 +398,10 @@ public class AShell {
                                 for(String SourcePath:AShellLibrariesPath){
                                     FileName.insert(0 ,SourcePath);
                                     if(!ValueArray.UsingAndCallTable.contains(FileName.toString())){
-                                        if(new File(FileName.toString()).isFile()){
+                                        File scriptFile=new File(FileName.toString());
+                                        if(scriptFile.isFile()){
                                             ValueArray.UsingAndCallTable.add(FileName.toString());
-                                            Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),RP,ValueArray/*,false*/);
+                                            Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),scriptFile.getParent(),RP,ValueArray/*,false*/);
                                             run.start();
                                             //if(r!=null){
                                                 synchronized(Thread){
@@ -531,6 +542,7 @@ public class AShell {
             public int ifc;//執行紀錄(1=已執行、0=未執行、-1=IF已執行結束)
         }
     	class Run extends Thread{
+                String scriptPath=null;//腳本所在路徑
                 Value_Array ValueArray;
                 SubEndStateCode SESC=new SubEndStateCode();//區塊結束狀態碼
 		//ArrayList<If_Count> ifArray=new ArrayList<>();//if的堆疊，用來存放被執行到的IF的狀態
@@ -547,9 +559,10 @@ public class AShell {
                 //boolean isNpcall=false;//判斷執行續是不是用npcall指令創造
                 //int setFun=0;//函數淵告判斷值，0為沒再宣告，1為宣告中，1以上為宣告函數中的函數
                 //int funidx;//函數指數，用來記錄現在宣告中的函數在變數陣列中的位置
-                public Run(FileReader fr,String fileName,Run_Point RP,Value_Array ValueArray/*,boolean isNpcall*/) throws IOException, Exception{
+                public Run(FileReader fr,String fileName,String scriptPath,Run_Point RP,Value_Array ValueArray/*,boolean isNpcall*/) throws IOException, Exception{
                         NotIsFunction=true;
                         this.ValueArray=ValueArray;
+                        this.scriptPath=scriptPath;
                         StringScan SS=new StringScan();//實例化空白、註解過濾器
                         command=new CommandArray(fileName);
                         try (BufferedReader br = new BufferedReader(fr)) {
@@ -582,7 +595,7 @@ public class AShell {
                         this.BackThread=RP.Run;
                         RP.Run=this;
                         this.RP=RP;
-                        com=new Com(RP,this,ValueArray);
+                        com=new Com(scriptPath,RP,this,ValueArray);
                         //this.isNpcall=isNpcall;
 		}
                /*public Run(InputStream is,Run r,Value_Array ValueArray) throws IOException, Exception{//using指令用
@@ -622,7 +635,7 @@ public class AShell {
                         this.BackThread=RP.Run;
                         RP.Run=this;
                         this.RP=RP;
-                        com=new Com(RP,this,ValueArray);
+                        com=new Com(scriptPath,RP,this,ValueArray);
                 }
                 int getTag(CommandArray command,String tag){
                     int Number=-2;//會用-2是因為當標籤放在程式碼中第一行的話，在程式碼清單中會是第零行，然後讀出來會被減一所以會變成-1
