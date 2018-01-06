@@ -102,7 +102,7 @@ public class Memory_Management {
     public static StringBuilder Object_Builder(Class_Type obj){
         StringBuilder assage;
         synchronized(Object_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.OBJECT_N+"@"+Class_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@"+Class_Memory_Type.count);
             Object_Memory.add(new Class_Memory_Type(Class_Memory_Type.count++, obj));
         }
         return assage;
@@ -110,7 +110,7 @@ public class Memory_Management {
     public static StringBuilder Object_Builder(Class_Type obj,int Arguments){
         StringBuilder assage;
         synchronized(Object_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.OBJECT_N+"@"+Class_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@"+Class_Memory_Type.count);
             Object_Memory.add(new Class_Memory_Type(Class_Memory_Type.count++, obj,Arguments));
         }
         return assage;
@@ -120,7 +120,7 @@ public class Memory_Management {
     public static StringBuilder Class_Builder(Class_Type obj){
         StringBuilder assage;
         synchronized(Class_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.CLASS_N+"@"+Class_Memory_Type.Scount);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@"+Class_Memory_Type.Scount);
             Class_Memory.add(new Class_Memory_Type(Class_Memory_Type.Scount++, obj));
         }
         return assage;
@@ -128,7 +128,7 @@ public class Memory_Management {
     public static StringBuilder Class_Builder(Class_Type obj,int Arguments){
         StringBuilder assage;
         synchronized(Class_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.CLASS_N+"@"+Class_Memory_Type.Scount);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@"+Class_Memory_Type.Scount);
             Class_Memory.add(new Class_Memory_Type(Class_Memory_Type.Scount++, obj,Arguments));
         }
         return assage;
@@ -137,7 +137,7 @@ public class Memory_Management {
     public static StringBuilder Function_Builder(Function obj){
         StringBuilder assage;
         synchronized(Function_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.FUNCTION_N+"@"+Function_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@"+Function_Memory_Type.count);
             Function_Memory.add(new Function_Memory_Type(Function_Memory_Type.count++, obj));
         }
         return assage;
@@ -145,7 +145,7 @@ public class Memory_Management {
     public static StringBuilder Function_Builder(Function obj,int Arguments){
         StringBuilder assage;
         synchronized(Function_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.FUNCTION_N+"@"+Function_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@"+Function_Memory_Type.count);
             Function_Memory.add(new Function_Memory_Type(Function_Memory_Type.count++, obj,Arguments));
         }
         return assage;
@@ -154,7 +154,7 @@ public class Memory_Management {
     public static StringBuilder Native_Function_Builder(Native_Function obj){
         StringBuilder assage;
         synchronized(Native_Function_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.NATIVE_FUNCTION_N+"@"+Native_Function_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@"+Native_Function_Memory_Type.count);
             Native_Function_Memory.add(new Native_Function_Memory_Type(Native_Function_Memory_Type.count++, obj));
         }
         return assage;
@@ -162,7 +162,7 @@ public class Memory_Management {
     public static StringBuilder Native_Function_Builder(Native_Function obj,int Arguments){
         StringBuilder assage;
         synchronized(Native_Function_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.NATIVE_FUNCTION_N+"@"+Native_Function_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@"+Native_Function_Memory_Type.count);
             Native_Function_Memory.add(new Native_Function_Memory_Type(Native_Function_Memory_Type.count++, obj,Arguments));
         }
         return assage;
@@ -171,7 +171,7 @@ public class Memory_Management {
     public static StringBuilder Array_Builder(StringBuilder AShell_Map_Key,StringBuilder obj,Value_Array ValueArray){
         StringBuilder assage;
         synchronized(Array_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.ARRAY_N+"@"+Array_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+Array_Memory_Type.count);
             Array_Memory.add(new Array_Memory_Type(Array_Memory_Type.count++, AShell_Map_Key, obj, ValueArray));
         }
         return assage;
@@ -179,7 +179,7 @@ public class Memory_Management {
     public static StringBuilder Array_Builder(StringBuilder AShell_Map_Key,StringBuilder obj,Value_Array ValueArray,int Arguments){
         StringBuilder assage;
         synchronized(Array_Memory){
-            assage=new StringBuilder("AShell_"+Type_String.ARRAY_N+"@"+Array_Memory_Type.count);
+            assage=new StringBuilder(Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+Array_Memory_Type.count);
             Array_Memory.add(new Array_Memory_Type(Array_Memory_Type.count++, AShell_Map_Key, obj, ValueArray,Arguments));
         }
         return assage;
@@ -204,16 +204,16 @@ public class Memory_Management {
         AShell_Memory_Type Arguments;
         try{
             if(Address.matches(Type_String.OBJECT_M))
-                (Arguments=M_get_Object(Integer.valueOf(Address.substring(("Ashell_"+Type_String.OBJECT_N+"@").length())))).Arguments++;
+                (Arguments=M_get_Object(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length())))).Arguments++;
             else if(Address.matches(Type_String.CLASS_M))
-                (Arguments=M_get_Class(Integer.valueOf(Address.substring(("Ashell_"+Type_String.CLASS_N+"@").length())))).Arguments++;
+                (Arguments=M_get_Class(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())))).Arguments++;
             else if(Address.matches( Type_String.FUNCTION_M))
-                (Arguments=M_get_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())))).Arguments++;
+                (Arguments=M_get_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())))).Arguments++;
             else if(Address.matches(Type_String.NATIVE_FUNCTION_M))
-                (Arguments=M_get_Native_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length())))).Arguments++;
+                (Arguments=M_get_Native_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length())))).Arguments++;
             else if(Address.matches(Type_String.ARRAY_M))
                 synchronized(Array_Memory){
-                    (Arguments=M_get_Array(Integer.valueOf(Address.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT).Arguments++;
+                    (Arguments=M_get_Array(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT).Arguments++;
                 }
             else throw new Exception("來自Add_To_Arguments函數的錯誤，只能更動AShell記憶體類型的參考值");
             synchronized(_Arguments_Temp){
@@ -241,7 +241,7 @@ public class Memory_Management {
         }
         try{
             if(Address.matches(Type_String.OBJECT_M)){ 
-                Class_Memory_Type ASClass=M_get_Object(Integer.valueOf(Address.substring(("Ashell_"+Type_String.OBJECT_N+"@").length())));
+                Class_Memory_Type ASClass=M_get_Object(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length())));
                 if(--ASClass.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASClass);//將該記憶體位置放置垃圾桶
                 else{
@@ -251,7 +251,7 @@ public class Memory_Management {
                     }
                 }
             }else if(Address.matches(Type_String.CLASS_M)){ 
-                Class_Memory_Type ASSClass=M_get_Class(Integer.valueOf(Address.substring(("Ashell_"+Type_String.CLASS_N+"@").length())));
+                Class_Memory_Type ASSClass=M_get_Class(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())));
                 if(--ASSClass.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASSClass);//將該記憶體位置放置垃圾桶
                 else{
@@ -261,7 +261,7 @@ public class Memory_Management {
                     }
                 }
             }else if(Address.matches( Type_String.FUNCTION_M)){ 
-                Function_Memory_Type ASFunction=M_get_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
+                Function_Memory_Type ASFunction=M_get_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())));
                 if(--ASFunction.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASFunction);//將該記憶體位置放置垃圾桶
                 else{
@@ -271,7 +271,7 @@ public class Memory_Management {
                     }
                 }
             }else if(Address.matches(Type_String.NATIVE_FUNCTION_M)){ 
-                Native_Function_Memory_Type ASNFunction=M_get_Native_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length())));
+                Native_Function_Memory_Type ASNFunction=M_get_Native_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length())));
                 if(--ASNFunction.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASNFunction);//將該記憶體位置放置垃圾桶
                 else{
@@ -283,7 +283,7 @@ public class Memory_Management {
             }else if(Address.matches(Type_String.ARRAY_M)){ 
                 Array_Memory_Type ASArray;
                 synchronized(Array_Memory){
-                     ASArray=M_get_Array(Integer.valueOf(Address.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT;
+                     ASArray=M_get_Array(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT;
                 }
                 if(--ASArray.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASArray);//將該記憶體位置放置垃圾桶
@@ -311,16 +311,16 @@ public class Memory_Management {
         AShell_Memory_Type Arguments;
         try{
             if(Address.matches(Type_String.OBJECT_M))
-                (Arguments=M_get_Object(Integer.valueOf(Address.substring(("Ashell_"+Type_String.OBJECT_N+"@").length())))).Arguments--;
+                (Arguments=M_get_Object(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length())))).Arguments--;
             else if(Address.matches(Type_String.CLASS_M))
-                (Arguments=M_get_Class(Integer.valueOf(Address.substring(("Ashell_"+Type_String.CLASS_N+"@").length())))).Arguments--;
+                (Arguments=M_get_Class(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())))).Arguments--;
             else if(Address.matches( Type_String.FUNCTION_M))
-                (Arguments=M_get_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())))).Arguments--;
+                (Arguments=M_get_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())))).Arguments--;
             else if(Address.matches(Type_String.NATIVE_FUNCTION_M))
-                (Arguments=M_get_Native_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length())))).Arguments--;
+                (Arguments=M_get_Native_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length())))).Arguments--;
             else if(Address.matches(Type_String.ARRAY_M))
                 synchronized(Array_Memory){
-                     (Arguments=M_get_Array(Integer.valueOf(Address.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT).Arguments--;
+                     (Arguments=M_get_Array(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT).Arguments--;
                 }
             else throw new Exception("來自Cut_To_Arguments_Not_Recycle函數的錯誤，只能更動AShell記憶體類型的參考值");
             synchronized(_Arguments_Temp){
@@ -337,25 +337,25 @@ public class Memory_Management {
     public static void Check_Arguments(String Address) throws Exception{
         try{
             if(Address.matches(Type_String.OBJECT_M)){ 
-                Class_Memory_Type ASClass=M_get_Object(Integer.valueOf(Address.substring(("Ashell_"+Type_String.OBJECT_N+"@").length())));
+                Class_Memory_Type ASClass=M_get_Object(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length())));
                 if(ASClass.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASClass);//將該記憶體位置放置垃圾桶
             }else if(Address.matches(Type_String.CLASS_M)){ 
-                Class_Memory_Type ASSClass=M_get_Class(Integer.valueOf(Address.substring(("Ashell_"+Type_String.CLASS_N+"@").length())));
+                Class_Memory_Type ASSClass=M_get_Class(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())));
                 if(ASSClass.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASSClass);//將該記憶體位置放置垃圾桶
             }else if(Address.matches( Type_String.FUNCTION_M)){ 
-                Function_Memory_Type ASFunction=M_get_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
+                Function_Memory_Type ASFunction=M_get_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())));
                 if(ASFunction.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASFunction);//將該記憶體位置放置垃圾桶
             }else if(Address.matches(Type_String.NATIVE_FUNCTION_M)){ 
-                Native_Function_Memory_Type ASNFunction=M_get_Native_Function(Integer.valueOf(Address.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length())));
+                Native_Function_Memory_Type ASNFunction=M_get_Native_Function(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length())));
                 if(ASNFunction.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASNFunction);//將該記憶體位置放置垃圾桶
             }else if(Address.matches(Type_String.ARRAY_M)){ 
                 Array_Memory_Type ASArray;
                 synchronized(Array_Memory){
-                     ASArray=M_get_Array(Integer.valueOf(Address.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT;
+                     ASArray=M_get_Array(Integer.valueOf(Address.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT;
                 }
                 if(ASArray.Arguments<=0)//當參考指數為零時
                     Recycle_Bin.add(ASArray);//將該記憶體位置放置垃圾桶
@@ -370,7 +370,7 @@ public class Memory_Management {
     public static Class_Type get_Object(String assage) throws Exception{
         if(!assage.matches(Type_String.OBJECT_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的物件記憶體");
-        return M_get_Object(Integer.valueOf(assage.substring(("Ashell_"+Type_String.OBJECT_N+"@").length()))).Obj;
+        return M_get_Object(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length()))).Obj;
     }
     /**取得類別記憶體位置所在的Memory類別
     *@param assage  記憶體位址
@@ -379,7 +379,7 @@ public class Memory_Management {
     private static Class_Memory_Type M_get_Object(int assage) throws Exception{
         synchronized(Object_Memory){
             if(Object_Memory.isEmpty())
-                throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.OBJECT_N+"@"+assage+"'");
+                throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@"+assage+"'");
             int top=Object_Memory.size(),botton=0,middle=(top-botton)/2;
             Class_Memory_Type CMT;
             while(true){
@@ -399,7 +399,7 @@ public class Memory_Management {
                 }
             }
         }
-        throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.OBJECT_N+"@"+assage+"'");
+        throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@"+assage+"'");
     }
     /**取得靜態類別記憶體位置下的值
     *@param assage  記憶體位址
@@ -409,7 +409,7 @@ public class Memory_Management {
     public static Class_Type get_Class(String assage) throws Exception{
         if(!assage.matches(Type_String.CLASS_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的類別記憶體");
-        return M_get_Class(Integer.parseInt(assage.substring(("Ashell_"+Type_String.CLASS_N+"@").length()))).Obj;
+        return M_get_Class(Integer.parseInt(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length()))).Obj;
     }
     /**取得函數記憶體位置所在的Memory類別
     *@param assage  記憶體位址
@@ -418,7 +418,7 @@ public class Memory_Management {
     public static Class_Memory_Type getClassCMT(String assage) throws Exception{
         if(!assage.matches(Type_String.CLASS_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的類別記憶體");
-        return M_get_Class(Integer.parseInt(assage.substring(("Ashell_"+Type_String.CLASS_N+"@").length())));
+        return M_get_Class(Integer.parseInt(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())));
     }
     /**取得靜態類別記憶體位置所在的Memory類別
     *@param assage  記憶體位址
@@ -427,7 +427,7 @@ public class Memory_Management {
     private static Class_Memory_Type M_get_Class(int assage) throws Exception{
         synchronized(Class_Memory){
             if(Class_Memory.isEmpty())
-                throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.CLASS_N+"@"+assage+"'");
+                throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@"+assage+"'");
             int top=Class_Memory.size(),botton=0,middle=(top-botton)/2;
             Class_Memory_Type SCMT;
             while(true){
@@ -447,7 +447,7 @@ public class Memory_Management {
                 }
             }
         }
-        throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.CLASS_N+"@"+assage+"'");
+        throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@"+assage+"'");
     }
     /**取得函數記憶體位置下的值
     *@param assage  記憶體位址
@@ -457,7 +457,7 @@ public class Memory_Management {
     public static Function get_Function(String assage) throws Exception{
         if(!assage.matches(Type_String.FUNCTION_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的函數記憶體");
-        Function_Memory_Type FMT=M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
+        Function_Memory_Type FMT=M_get_Function(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())));
         return FMT.Obj;
     }
     /**取得函數記憶體位置所在的Memory類別
@@ -467,7 +467,7 @@ public class Memory_Management {
     public static Function_Memory_Type getFunctionForFMT(String assage) throws Exception{
         if(!assage.matches(Type_String.FUNCTION_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的函數記憶體");
-        return M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
+        return M_get_Function(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())));
     }
     /**取得函數記憶體位置所在的Memory類別
     *@param assage  記憶體位址
@@ -476,7 +476,7 @@ public class Memory_Management {
     private static Function_Memory_Type M_get_Function(int assage) throws Exception{
         synchronized(Function_Memory){
             if(Function_Memory.isEmpty())
-                throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.FUNCTION_N+"@"+assage+"'");
+                throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@"+assage+"'");
             int top=Function_Memory.size(),botton=0,middle=(top-botton)/2;
             Function_Memory_Type FMT;
             while(true){
@@ -496,7 +496,7 @@ public class Memory_Management {
                 }
             }
         }
-        throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.FUNCTION_N+"@"+assage+"'");
+        throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@"+assage+"'");
     }
     /**取得Native函數記憶體位置下的值
     *@param assage  記憶體位址
@@ -506,7 +506,7 @@ public class Memory_Management {
     public static Native_Function get_Native_Function(String assage) throws Exception{
         if(!assage.matches(Type_String.NATIVE_FUNCTION_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的Native函數記憶體");
-        return M_get_Native_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length()))).Obj;
+        return M_get_Native_Function(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length()))).Obj;
     }
     /**取得Native函數記憶體位置所在的Memory類別
     *@param assage  記憶體位址
@@ -515,7 +515,7 @@ public class Memory_Management {
     private static Native_Function_Memory_Type M_get_Native_Function(int assage) throws Exception{
         synchronized(Native_Function_Memory){
             if(Native_Function_Memory.isEmpty())
-                throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.NATIVE_FUNCTION_N+"@"+assage+"'");
+                throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@"+assage+"'");
             int top=Native_Function_Memory.size(),botton=0,middle=(top-botton)/2;
             Native_Function_Memory_Type MFMT;
             while(true){
@@ -535,7 +535,7 @@ public class Memory_Management {
                 }
             }
         }
-        throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.NATIVE_FUNCTION_N+"@"+assage+"'");
+        throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@"+assage+"'");
     }
     /**設定陣列記憶體所記錄的陣列大小，用於陣列的第一個記憶體位置
     *@param assage  記憶體位址
@@ -546,7 +546,7 @@ public class Memory_Management {
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
         synchronized(Array_Memory){
-            M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT.size=size;
+            M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT.size=size;
         }
     }
     /**取得陣列記憶體所記錄的陣列大小，用於陣列的第一個記憶體位置
@@ -558,7 +558,7 @@ public class Memory_Management {
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
         synchronized(Array_Memory){
-            return M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT.size;
+            return M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT.size;
         }
     }
     /**取得陣列記憶體位置下的值
@@ -570,7 +570,7 @@ public class Memory_Management {
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
         synchronized(Array_Memory){
-            return M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT.Obj;
+            return M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT.Obj;
         }
     }
     /**取得陣列記憶體位置下的變數清單
@@ -582,7 +582,7 @@ public class Memory_Management {
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
         synchronized(Array_Memory){
-            return M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).AMT.ValueArray;
+            return M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).AMT.ValueArray;
         }
     }
     private static class get_Array_return_struct{
@@ -600,7 +600,7 @@ public class Memory_Management {
     private static get_Array_return_struct M_get_Array(int assage) throws Exception{
         synchronized(Array_Memory){
             if(Array_Memory.isEmpty())
-                throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.ARRAY_N+"@"+assage+"'");
+                throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+assage+"'");
             int top=Array_Memory.size(),botton=0,middle=(top-botton)/2;
             Array_Memory_Type AMT;
             while(true){
@@ -620,7 +620,7 @@ public class Memory_Management {
                 }
             }
         }
-        throw new AShellMempryValueNotFindException("查無記憶體位置'AShell_"+Type_String.ARRAY_N+"@"+assage+"'");
+        throw new AShellMempryValueNotFindException("查無記憶體位置'"+Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+assage+"'");
     }
     /**依照所指定的值，切移動鄰近的記憶體位置
     *@param assage  記憶體位址
@@ -633,10 +633,10 @@ public class Memory_Management {
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
         if(distance==0)
             return assage;
-        get_Array_return_struct GARS=M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length())));
+        get_Array_return_struct GARS=M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length())));
         if(0<=distance&&distance<GARS.AMT.size){
             distance+=GARS.index;
-            return "AShell_Array@"+Array_Memory.get(distance).Key;
+            return Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+Array_Memory.get(distance).Key;
         }else
             throw new AShellMempryValueNotFindException("陣列引數超出範圍，長度是"+GARS.AMT.size+"但引數是"+distance);
         //return "AShell_Array@"+(distance+Integer.valueOf(assage.substring(13)));
@@ -650,11 +650,11 @@ public class Memory_Management {
     public synchronized static String move(String assage,String Map_Key) throws Exception{
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
-        int index=M_get_Array(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length()))).index;
+        int index=M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length()))).index;
         for(int i=index;i<index+Array_Memory.get(index).size;i++){
             Array_Memory_Type AMT=Array_Memory.get(i);
             if(AMT.AShell_Map_Key!=null&&Map_Key.equals(AMT.AShell_Map_Key.toString()))
-                return "AShell_Array@"+AMT.Key;
+                return Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+AMT.Key;
         }
         throw new Exception("Key值"+Map_Key+"不存在");
     }
@@ -683,7 +683,7 @@ public class Memory_Management {
         synchronized(Array_Memory){
             AArray.ValueArray.clear();
             for(int i=0,size=AArray.size-1;true;i++){
-                if(AArray.Obj.toString().startsWith("AShell_A"))
+                if(AArray.Obj.toString().matches(Type_String.ARRAY_M))
                     ArrayRemove(Integer.valueOf(AArray.Obj.substring(13)),isGC);
                 //System.err.println("LOG:AShell_Array@"+AArray.Key);
                 Array_Memory.remove(AArray);
@@ -702,7 +702,7 @@ public class Memory_Management {
      * @throws Exception 拋出變數未宣告之錯誤給執行續接收
      */
     private static void ClassRemove(AShell AS,AShell.Run_Point RP,String assage,boolean isGC) throws Exception{
-        Class_Memory_Type AClass=M_get_Object(Integer.valueOf(assage.substring(("Ashell_"+Type_String.OBJECT_N+"@").length())));
+        Class_Memory_Type AClass=M_get_Object(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.OBJECT_N+"@").length())));
         if(!isGC||isGC&&AClass.Arguments<=0)
             ClassRemove(AS,RP,AClass,isGC);
     }
@@ -815,10 +815,10 @@ public class Memory_Management {
      * @param assage 要回收的AShell記憶體位置
      */
     public static void remove(AShell AS,AShell.Run_Point RP,String assage) throws Exception{
-        if(assage.startsWith("AShell_O")){
+        if(assage.matches(Type_String.OBJECT_M)){
             ClassRemove(AS,RP,assage,false);
-        }else if(assage.startsWith("AShell_C")){
-            Class_Memory_Type ASClass=M_get_Class(Integer.valueOf(assage.substring(("Ashell_"+Type_String.CLASS_N+"@").length())));
+        }else if(assage.matches(Type_String.CLASS_M)){
+            Class_Memory_Type ASClass=M_get_Class(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.CLASS_N+"@").length())));
             ASClass.Obj.CodeArray.clear();
             ASClass.Obj.ValueArray.clear();
             if(ASClass.Obj.Parent!=null)
@@ -826,8 +826,8 @@ public class Memory_Management {
             synchronized(Class_Memory){
                 Class_Memory.remove(ASClass);
             }
-        }else if(assage.startsWith("AShell_F")){
-            Function_Memory_Type AFunction=M_get_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.FUNCTION_N+"@").length())));
+        }else if(assage.matches(Type_String.FUNCTION_M)){
+            Function_Memory_Type AFunction=M_get_Function(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.FUNCTION_N+"@").length())));
             AFunction.Obj.ValueArray.clear();
             AFunction.Obj.CodeArray.clear();
             if(AFunction.Obj.Closure_ValueArray!=null)
@@ -835,13 +835,13 @@ public class Memory_Management {
             synchronized(Function_Memory){
                 Function_Memory.remove(AFunction);
             }
-        }else if(assage.startsWith("AShell_N")){
-            Native_Function_Memory_Type ANFunction=M_get_Native_Function(Integer.valueOf(assage.substring(("Ashell_"+Type_String.NATIVE_FUNCTION_N+"@").length())));
+        }else if(assage.matches(Type_String.NATIVE_FUNCTION_M)){
+            Native_Function_Memory_Type ANFunction=M_get_Native_Function(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.NATIVE_FUNCTION_N+"@").length())));
             synchronized(Native_Function_Memory){
                 Native_Function_Memory.remove(ANFunction);
             }
-        }else if(assage.startsWith("AShell_A")){
-            ArrayRemove(Integer.valueOf(assage.substring(("Ashell_"+Type_String.ARRAY_N+"@").length())),false);
+        }else if(assage.matches(Type_String.ARRAY_M)){
+            ArrayRemove(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length())),false);
         }else
             throw new AShellMempryValueNotFindException("類型必須是AShell記憶體位置");
     }

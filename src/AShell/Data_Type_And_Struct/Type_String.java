@@ -2,6 +2,7 @@ package AShell.Data_Type_And_Struct;
 
 //AShell類型名稱字串
 public class Type_String {
+    public static final String MEMORY_TYPE_FIRST           = "AShell_";
     public static final String FUNCTION_M                  = "AShell_Function@\\d+";
     public static final String FUNCTION_N                  = "Function";
     public static final String NATIVE_FUNCTION_M           = "AShell_NFunction@\\d+";

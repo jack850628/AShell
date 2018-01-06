@@ -124,7 +124,7 @@ public class ResultsValue {
                 CensorValueReturn CVR;
                 Function fun = null;
                 Native_Function Java_Function = null;
-                if(Tent.toString().startsWith("AShell_C")){
+                if(Tent.toString().matches(Type_String.CLASS_M)){
                     Class_Type AShObject,Class;
                     Class=Memory_Management.get_Class(Tent.toString());
                     AShObject=new Class_Type(Class.ValueArray);
@@ -136,17 +136,17 @@ public class ResultsValue {
                     AS.Run_Function(AShObject.ValueArray,Class.CodeArray,RP);
                     CVR=CensorValue.CensorValue(Type_String.INSTANCE_FUNCTION_NAME,AShObject.ValueArray,false);
                     String Assage=CVR.ValueArray.get(CVR.index).Tent.toString();
-                    if(Assage.startsWith("AShell_F"))
+                    if(Assage.matches(Type_String.FUNCTION_M))
                         fun=Memory_Management.get_Function(CVR.ValueArray.get(CVR.index).Tent.toString());
                     else
                         Java_Function=Memory_Management.get_Native_Function(Assage);
-                }else if(Tent.toString().startsWith("AShell_F"))
+                }else if(Tent.toString().matches(Type_String.FUNCTION_M))
                     fun=Memory_Management.get_Function(Tent.toString());
                 else
                     Java_Function=Memory_Management.get_Native_Function(Tent.toString());//從記憶體管理器中取得java函數
                 if(fun!=null){//AShell函數呼叫
                     if(Args.size()>fun.ValueArray.size())
-                        throw new Exception(((!Tent.toString().startsWith("AShell_C"))?"函數":"建構式")+"並非"+Args.size()+"個參數類型的。");
+                        throw new Exception(((!Tent.toString().matches(Type_String.CLASS_M))?"函數":"建構式")+"並非"+Args.size()+"個參數類型的。");
                     ValueArray=new Value_Array(fun.Closure_ValueArray);//建立一個新的變數清單給函數的執行續用，取用至閉包變數清單
                     StringBuilder ValueTentTemp;
                     for(int i=0;i<fun.ValueArray.size();i++){
@@ -168,7 +168,7 @@ public class ResultsValue {
                         }
                     }
                     String Function_Return=AS.Run_Function(ValueArray,fun.CodeArray,RP);//函數回值是AShell記憶體類型的話，該參照指數就會被加一，以防止因為變數清單被銷毀而被GC回收
-                    if(Tent.toString().startsWith("AShell_F")){//如果是函數呼叫
+                    if(Tent.toString().matches(Type_String.FUNCTION_M)){//如果是函數呼叫
                         Variable.delete(0, Variable.length());
                         Variable.append(Function_Return);
                     }else{
@@ -184,7 +184,7 @@ public class ResultsValue {
                         NFArgs[i]=new AShellType().setAShell_Value((!AShellArg.equals(""))?AShellArg:Type_String.NULL);//將AShell函數呼叫參數的值轉換成java字串
                     }
                     try{
-                        if(Tent.toString().startsWith("AShell_N")){
+                        if(Tent.toString().matches(Type_String.NATIVE_FUNCTION_M)){
                             Variable.delete(0, Variable.length());
                             Variable.append(((AShellType)Java_Function.native_function.invoke(Java_Function.instanct_Class,new Object[]{new AShell_this(AS,RP,Java_Function.ValueArray),NFArgs})).AShell_Value);//調用函數並取得回傳值
                         }else
@@ -251,7 +251,7 @@ public class ResultsValue {
 	public static void SetValue(AShell AS,ArrayList<VarValueName> ValueName,StringBuilder Str,VarMode.Mode Mode) throws Exception{
 		CensorValueReturn CVR;
 		for(VarValueName SV:ValueName){
-			if(!SV.name.toString().startsWith("AShell")){//如果變數名稱不是記憶體位置
+			if(!SV.name.toString().matches(Type_String.MEMORY_TYPE)){//如果變數名稱不是記憶體位置
                                 if(!SV.name.toString().matches(Type_String.VALUE_NAME)||SV.name.toString().matches(Type_String.NULL+"|"+Type_String.TRUE+"|"+Type_String.FALSE))//正規表示法，第一個為A-Z、a_z、_、$，接下來的字為A-Z、a-z、0-9、_、$，後面的*為重複無限次，等價於{0,}({m,n}為重複m到n次)。
                                     throw new ArithmeticException("變數名稱'"+SV.name.toString()+"'不被允許。");
                                 CVR=CensorValue.CensorValue(SV.name.toString(),SV.ValueArray,Mode==VarMode.Mode.Var);

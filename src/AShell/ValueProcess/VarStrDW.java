@@ -77,13 +77,13 @@ public class VarStrDW {
                                     ValueArray=BUValueArray;
                                 }else{
                                     StringBuilder Value=CountRecord.get(CountRecord.size()-1).get(CountRecord.get(CountRecord.size()-1).size()-1).Value;
-                                    if((Value.toString().startsWith("AShell_O")))
+                                    if((Value.toString().matches(Type_String.OBJECT_M)))
                                         ValueArray=Memory_Management.get_Object(Value.toString()).ValueArray;
-                                    else if(Value.toString().startsWith("AShell_C"))
+                                    else if(Value.toString().matches(Type_String.CLASS_M))
                                         ValueArray=Memory_Management.get_Class(Value.toString()).ValueArray;
-                                    else if(Value.toString().startsWith("AShell_A"))
+                                    else if(Value.toString().matches(Type_String.ARRAY_M))
                                         ValueArray=Memory_Management.get_Array_ValueArray(Value.toString());
-                                    else if(Value.toString().startsWith("AShell_F")||Value.toString().startsWith("AShell_N"))
+                                    else if(Value.toString().matches(Type_String.FUNCTION_M)||Value.toString().matches(Type_String.NATIVE_FUNCTION_M))
                                         throw new Exception("物件存取運算子不能使用於函數記憶體類型");
                                     else
                                         throw new Exception("'"+Value.toString()+"'不是有效的AShell記憶體類型");
@@ -316,7 +316,7 @@ public class VarStrDW {
                             }else
                                 Results(ValueArray);
                             if(CountRecord.get(CountRecord.size()-1).get(CountRecord.
-                                    get(CountRecord.size()-1).size()-1).Value.toString().matches("AShell_("+Type_String.CLASS_N+"|"+Type_String.FUNCTION_N+"|"+Type_String.NATIVE_FUNCTION_N+")@\\d+")){
+                                    get(CountRecord.size()-1).size()-1).Value.toString().matches(Type_String.MEMORY_TYPE_FIRST+"("+Type_String.CLASS_N+"|"+Type_String.FUNCTION_N+"|"+Type_String.NATIVE_FUNCTION_N+")@\\d+")){
                                 /**函數紀錄**/
                                 ArrayList<StringBuilder> Args=new ArrayList<>();
                                 //Variable.append(str);
