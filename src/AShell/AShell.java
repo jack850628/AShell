@@ -909,7 +909,7 @@ public class AShell {
                                             }else
                                                 while(true){
                                                     ComLenght++;
-                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*"))
                                                         setFun++;
                                                     else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
                                                         if(setFun--==0)
@@ -1331,7 +1331,7 @@ public class AShell {
                                             }else
                                                 while(true){
                                                     ComLenght++;
-                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*"))
                                                         setFun++;
                                                     else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
                                                         if(setFun--==0)
@@ -1744,7 +1744,7 @@ public class AShell {
                                             }else
                                                 while(true){
                                                     ComLenght++;
-                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*"))
                                                         setFun++;
                                                     else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
                                                         if(setFun--==0)
@@ -2189,7 +2189,7 @@ public class AShell {
                                             }else
                                                 while(true){
                                                     ComLenght++;
-                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*"))
                                                         setFun++;
                                                     else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
                                                         if(setFun--==0)
