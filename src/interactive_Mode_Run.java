@@ -5,6 +5,8 @@ import AShell.CommandResolve.CommandArray;
 import AShell.CommandResolve.StringScan;
 import AShell.Data_Type_And_Struct.Code_String;
 import AShell.Data_Type_And_Struct.Value_Array;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //互動式命令列界面類別
 public class interactive_Mode_Run {
     AShell AS;
@@ -209,35 +211,39 @@ public class interactive_Mode_Run {
                             }
                             ch=' ';
                     }else if(Com.startsWith(Code_String.FUNCTION+" ")){
-                        if(!Com.matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*")){//判斷是否為Lanbda形式宣告，例如function a(x)=x+1或function a[[({0}[0])]]={(9)}[0]+1
-                            int setFun=0;
-                            while(true){
-                                System.out.print("...");
-                                try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                        try {
+                            if(!StringScan.matchFunctionLanbda(new StringBuilder(Com))){//判斷是否為Lanbda形式宣告，例如function a(x)=x+1或function a[[({0}[0])]]={(9)}[0]+1
+                                int setFun=0;
+                                while(true){
+                                    System.out.print("...");
+                                    try {
+                                        SB=SS.StrBlankDeal_with(StringRead.Read());
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        continue;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
+                                            command.add(new Command(SB,LineNumbers));
                                     }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    continue;
-                                if(SB.toString().startsWith(Code_String.FUNCTION+" ")&&!SB.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[.*?\\])?(?:\\s*\\(.*?\\))?\\s*=.*"))
-                                    setFun++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDFU))
-                                    if(setFun--==0)
-                                         break;
+                                        continue;
+                                    if(SB.toString().startsWith(Code_String.FUNCTION+" ")&&!StringScan.matchFunctionLanbda(SB))
+                                        setFun++;
+                                    else if(StringScan.startsWith(SB.toString(),Code_String.ENDFU))
+                                        if(setFun--==0)
+                                            break;
+                                }
                             }
+                        } catch (Exception ex) {
+                            AS.error.Error(ex.getMessage());
                         }
                         ch=' ';
                     }if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.FINALLY))

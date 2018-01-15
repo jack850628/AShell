@@ -191,7 +191,8 @@ public class StringScan {
                                     break;
                                 else if(c=='\\')
                                     i++;
-                            }   break;
+                            }   
+                            break;
                         default:
                             break;
                     }
@@ -298,4 +299,82 @@ public class StringScan {
             }
             throw new Exception("陣列引數超出範圍");
 	}
+        public static boolean matchFunctionLanbda(StringBuilder Str) throws Exception{
+            for(int i=0;i<Str.length();i++)
+                switch(Str.charAt(i)){
+                    case '[':
+                    {
+                        char c;
+                        int index=1;
+                        loop:while(true){
+                            if(++i<Str.length())
+                                c=Str.charAt(i);
+                            else
+                                throw new Exception("語法錯誤，中括號不對稱");
+                            switch(c){
+                                case '[':
+                                    index++;
+                                    break;
+                                case ']':
+                                    if(--index==0)
+                                        break loop;
+                                    break;
+                                case '\"':
+                                {
+                                    while(true){
+                                        if(++i<Str.length())
+                                            c=Str.charAt(i);
+                                        else
+                                            throw new Exception("語法錯誤，字串沒有結束");
+                                        if(c=='\"')
+                                            break;
+                                        else if(c=='\\')
+                                            i++;
+                                    }  
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case '(':
+                    {
+                        char c;
+                        int index=1;
+                        loop:while(true){
+                            if(++i<Str.length())
+                                c=Str.charAt(i);
+                            else
+                                throw new Exception("語法錯誤，括號不對稱");
+                            switch(c){
+                                case '(':
+                                    index++;
+                                    break;
+                                case ')':
+                                    if(--index==0)
+                                        break loop;
+                                    break;
+                                case '\"':
+                                {
+                                    while(true){
+                                        if(++i<Str.length())
+                                            c=Str.charAt(i);
+                                        else
+                                            throw new Exception("語法錯誤，字串沒有結束");
+                                        if(c=='\"')
+                                            break;
+                                        else if(c=='\\')
+                                            i++;
+                                    }  
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case '=':
+                        return true;
+                }
+            return false;
+        }
 }
