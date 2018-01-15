@@ -209,6 +209,7 @@ public class interactive_Mode_Run {
                             }
                             ch=' ';
                     }else if(Com.startsWith(Code_String.FUNCTION+" ")){
+                        if(!Com.matches("^"+Code_String.FUNCTION+" [^\\[\\]\\(\\)]+?(?:\\s*\\[.*\\])?(?:\\s*\\(.*\\))?\\s*=.*")){//判斷是否為Lanbda形式宣告，例如function a(x)=x+1或function a[[({0}[0])]]={(9)}[0]+1
                             int setFun=0;
                             while(true){
                                 System.out.print("...");
@@ -231,13 +232,14 @@ public class interactive_Mode_Run {
                                         command.add(new Command(SB,LineNumbers));
                                 }else
                                     continue;
-                                if(SB.toString().startsWith(Code_String.FUNCTION+" "))
+                                if(SB.toString().startsWith(Code_String.FUNCTION+" ")&&!SB.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
                                     setFun++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDFU))
                                     if(setFun--==0)
                                          break;
                             }
-                            ch=' ';
+                        }
+                        ch=' ';
                     }if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.FINALLY))
                         System.out.println(Code_String.FINALLY+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
                     else

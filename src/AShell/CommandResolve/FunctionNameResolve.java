@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class FunctionNameResolve {
 	public ArrayList<StringBuilder> Args=new ArrayList<>();
 	public StringBuilder Name=new StringBuilder();
+        public StringBuilder Lanbda=null;
 	public FunctionNameResolve(String Str){
             //System.out.println("Fun "+Str);
             int Record=0;
@@ -26,6 +27,11 @@ public class FunctionNameResolve {
 			}else if(str.equals(")")){
                             if(--Record>0)
                                 Args.get(Args.size()-1).append(str);
+                        }else if(Record==0&&str.equals("=")){//抓取Landba形式宣告之=後面的運算式
+                            if(i<Str.length()){
+                                Lanbda=new StringBuilder(Str.substring(i+1,Str.length()));
+                                return;
+                            }
                         }else if(!Results&&str.equals("[")){//建立函數時，可以使用像是 function x[(1+1)]() 這樣的方式，所以這是用來讀取中誇號的內容
                             this.Name.append(str);
                             int count=1;

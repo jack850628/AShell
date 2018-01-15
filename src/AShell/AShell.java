@@ -43,6 +43,7 @@ import java.util.LinkedHashSet;
 //import java.util.Properties;
 
 public class AShell {
+    private String version="1.1.9";
     private boolean interactiveMode=false;//互動模式判斷
     Value_Array ValueArray=new Value_Array(null);
     private Thread_List ThreadList=new Thread_List();//執行續記錄清單，清單中都紀錄正在執行中的執行續
@@ -101,7 +102,7 @@ public class AShell {
         return ValueArray;
     }
     public String getVar(){
-        return "Ver:1.1.8.2";
+        return "Ver:"+version;
     }
     private String Read(int mode){
         return read.Rand(mode);
@@ -902,15 +903,19 @@ public class AShell {
                                                             new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
                                             }
                                             int setFun=0;
-                                            while(true){
-                                                ComLenght++;
-                                                if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" "))
-                                                    setFun++;
-                                                else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
-                                                    if(setFun--==0)
-                                                        break;
-                                                fun.CodeArray.add(new Command(command.get(ComLenght)));
-                                            }
+                                            if(FNR.Lanbda!=null){
+                                                FNR.Lanbda.insert(0, Code_String.RETURN+" ");
+                                                fun.CodeArray.add(new Command(FNR.Lanbda,command.get(ComLenght).Command,command.get(ComLenght).LineNumbers));
+                                            }else
+                                                while(true){
+                                                    ComLenght++;
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                        setFun++;
+                                                    else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
+                                                        if(setFun--==0)
+                                                            break;
+                                                    fun.CodeArray.add(new Command(command.get(ComLenght)));
+                                                }
                                             CreateSyntaxTree.CST(fun.CodeArray);
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
                                             Class_Type Class;
@@ -1002,7 +1007,7 @@ public class AShell {
                                     if(NotIsFunction){//當執行續不是函數的時
                                         Stop();
                                         if(SESC.Main)
-                                            error.Error("錯誤！檔案"+command.fileName+"裡，程式碼第"+command.get(ComLenght).LineNumbers+"行:"+command.get(ComLenght).Command.toString()+"中，"+e.getMessage()+"\n");
+                                            error.Error("錯誤！檔案"+command.fileName+"裡，程式碼第"+command.get(ComLenght).LineNumbers+"行:"+command.get(ComLenght).erroeShowCommand.toString()+"中，"+e.getMessage()+"\n");
                                         else
                                             error.Error("錯誤！檔案"+SESC.fileName+"裡，程式碼第"+SESC.LineNumbers+"行:"+SESC.Code+"中，"+e.getMessage()+"\n");
                                         if(!interactiveMode){
@@ -1012,7 +1017,7 @@ public class AShell {
                                         stop.Stop();
                                     }else{//當執行續是函數的時
                                         if(SESC.state!=SubEndStateCode.State.Exception)
-                                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                            SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                         break;
                                     }
                                 }
@@ -1220,7 +1225,7 @@ public class AShell {
                                                     }
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 return;
@@ -1231,7 +1236,7 @@ public class AShell {
                                                     RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     return;
                                                 }
@@ -1253,7 +1258,7 @@ public class AShell {
                                                     RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     return;
                                                 }
@@ -1274,7 +1279,7 @@ public class AShell {
 						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                             }catch(final Exception e){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                 ValueArray.clear();
                                                 return;
                                             }
@@ -1301,7 +1306,7 @@ public class AShell {
                                             int Number=getTag(command,command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                             if(Number==-2){
                                                 ValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
@@ -1320,15 +1325,19 @@ public class AShell {
                                                             new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
                                             }
                                             int setFun=0;
-                                            while(true){
-                                                ComLenght++;
-                                                if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" "))
-                                                    setFun++;
-                                                else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
-                                                    if(setFun--==0)
-                                                        break;
-                                                fun.CodeArray.add(new Command(command.get(ComLenght)));
-                                            }
+                                            if(FNR.Lanbda!=null){
+                                                FNR.Lanbda.insert(0, Code_String.RETURN+" ");
+                                                fun.CodeArray.add(new Command(FNR.Lanbda,command.get(ComLenght).Command,command.get(ComLenght).LineNumbers));
+                                            }else
+                                                while(true){
+                                                    ComLenght++;
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                        setFun++;
+                                                    else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
+                                                        if(setFun--==0)
+                                                            break;
+                                                    fun.CodeArray.add(new Command(command.get(ComLenght)));
+                                                }
                                             CreateSyntaxTree.CST(fun.CodeArray);
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
                                             Class_Type Class;
@@ -1411,7 +1420,7 @@ public class AShell {
                                     return;
                                 }catch (final Exception e) {
                                     ValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
@@ -1619,7 +1628,7 @@ public class AShell {
                                                     break;
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -1631,7 +1640,7 @@ public class AShell {
                                                     RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1656,7 +1665,7 @@ public class AShell {
                                                     RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -1680,7 +1689,7 @@ public class AShell {
 						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                             }catch(final Exception e){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
                                                 return;
@@ -1710,7 +1719,7 @@ public class AShell {
                                             if(Number==-2){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
@@ -1729,15 +1738,19 @@ public class AShell {
                                                             new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
                                             }
                                             int setFun=0;
-                                            while(true){
-                                                ComLenght++;
-                                                if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" "))
-                                                    setFun++;
-                                                else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
-                                                    if(setFun--==0)
-                                                        break;
-                                                fun.CodeArray.add(new Command(command.get(ComLenght)));
-                                            }
+                                            if(FNR.Lanbda!=null){
+                                                FNR.Lanbda.insert(0, Code_String.RETURN+" ");
+                                                fun.CodeArray.add(new Command(FNR.Lanbda,command.get(ComLenght).Command,command.get(ComLenght).LineNumbers));
+                                            }else
+                                                while(true){
+                                                    ComLenght++;
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                        setFun++;
+                                                    else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
+                                                        if(setFun--==0)
+                                                            break;
+                                                    fun.CodeArray.add(new Command(command.get(ComLenght)));
+                                                }
                                             CreateSyntaxTree.CST(fun.CodeArray);
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
                                             Class_Type Class;
@@ -1823,7 +1836,7 @@ public class AShell {
                                 }catch (final Exception e) {
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
@@ -2060,7 +2073,7 @@ public class AShell {
                                                     break;
                                                 Try.state=try_Count.State.None;
                                         }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.THROW+" ")){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, 
                                                         new StrDW(AShell.this,RP,command.get(ComLenght).Command.substring(Code_String.THROW.length()+1).trim(),ValueArray).Str.toString());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
@@ -2072,7 +2085,7 @@ public class AShell {
                                                     RunWHILE_FOR(true,FAS.Args.get(0).toString(),FAS.Args.get(1).toString(),FAS.Args.get(2).toString(),
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -2097,7 +2110,7 @@ public class AShell {
                                                     RunWHILE_FOR(false,null,command.get(ComLenght).Command.substring(Code_String.WHILE.length()+1).trim(),null,
                                                             new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                                 }catch(final Exception e){
-                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                     ValueArray.clear();
                                                     JudgmentAreaValueArray.clear();
                                                     return;
@@ -2121,7 +2134,7 @@ public class AShell {
 						RunDWHILE(command.get(ComLenght).Command.substring(Code_String.DWHILE.length()+1).trim(),
                                                         new Value_Array(ValueArray),command.get(ComLenght).ComArray);
                                             }catch(final Exception e){
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
                                                 return;
@@ -2151,7 +2164,7 @@ public class AShell {
                                             if(Number==-2){
                                                 ValueArray.clear();
                                                 JudgmentAreaValueArray.clear();
-                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
+                                                SESC.setSubEndStateCode(SubEndStateCode.State.Tag, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, command.get(ComLenght).Command.substring(Code_String.GOTO.length()+1).trim());
                                                 //SESC.setIndex(Number);
                                                 return;
                                             }
@@ -2170,15 +2183,19 @@ public class AShell {
                                                             new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
                                             }
                                             int setFun=0;
-                                            while(true){
-                                                ComLenght++;
-                                                if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" "))
-                                                    setFun++;
-                                                else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
-                                                    if(setFun--==0)
-                                                        break;
-                                                fun.CodeArray.add(new Command(command.get(ComLenght)));
-                                            }
+                                            if(FNR.Lanbda!=null){
+                                                FNR.Lanbda.insert(0, Code_String.RETURN+" ");
+                                                fun.CodeArray.add(new Command(FNR.Lanbda,command.get(ComLenght).Command,command.get(ComLenght).LineNumbers));
+                                            }else
+                                                while(true){
+                                                    ComLenght++;
+                                                    if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")&&!command.get(ComLenght).Command.toString().matches("^"+Code_String.FUNCTION+" .+?(?:\\s*\\[(?=.*?\\[.*?\\].*?).*?\\])?(?:\\s*\\((?=.*?\\(.*?\\)).*?\\))?\\s*=.*"))
+                                                        setFun++;
+                                                    else if(StringScan.startsWith(command.get(ComLenght).Command.toString(),Code_String.ENDFU))
+                                                        if(setFun--==0)
+                                                            break;
+                                                    fun.CodeArray.add(new Command(command.get(ComLenght)));
+                                                }
                                             CreateSyntaxTree.CST(fun.CodeArray);
 				    }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.CLASS+" ")){
                                             Class_Type Class;
@@ -2264,7 +2281,7 @@ public class AShell {
                                 }catch (final Exception e) {
                                     ValueArray.clear();
                                     JudgmentAreaValueArray.clear();
-                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).Command.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
+                                    SESC.setSubEndStateCode(SubEndStateCode.State.Exception, command.get(ComLenght).erroeShowCommand.toString(),command.get(ComLenght).LineNumbers,command.fileName, e.getMessage());
                                     return;
                                 }
 			}
