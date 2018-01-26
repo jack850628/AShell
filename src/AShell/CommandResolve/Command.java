@@ -17,6 +17,8 @@ public class Command {
     }
     public Command(Command CA){
         this.Command=CA.Command;
+        this.erroeShowCommand=CA.erroeShowCommand;
+        //this.ComArray=CA.ComArray;//這行目前用不到，因為目前的版本中在class和function裡begin、if等等的區塊程式碼在class和function被執行到之前都不會被折疊，故CA.ComArray一定都是null
         this.LineNumbers=CA.LineNumbers;
     }
     public void setComArray(CommandArray ComArray){
