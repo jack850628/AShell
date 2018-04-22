@@ -220,9 +220,8 @@ public class StrDW {
                                                 get(CountRecord.size()-1).size()-1).Value.toString().matches(Type_String.ARRAY_M))//如果要取的不是字串中的字元
                                             ResultsValue.ArrayResults(AS,RP,ValueArray,CountRecord,false,Array_Index);
                                         else{
-                                            StringBuilder Temp=CountRecord.get(CountRecord.size()-1).get(CountRecord.
-                                                get(CountRecord.size()-1).size()-1).Value,
-                                                    ASChar=StringScan.get_AShell_String_Character_Array_for_StrDW(Temp,Array_Index);
+                                            StringBuilder Temp=CountRecord.get(CountRecord.size()-1).get(CountRecord.get(CountRecord.size()-1).size()-1).Value;
+                                            StringBuilder ASChar=StringScan.get_AShell_String_Character_Array_for_StrDW(Temp,Array_Index);
                                             Temp.delete(0,Temp.length());
                                             Temp.append(ASChar);
                                         }

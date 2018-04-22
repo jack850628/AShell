@@ -275,13 +275,14 @@ public class VarStrDW {
                                                     get(CountRecord.size()-1).size()-1).Value.charAt(0)!='\"'){//如果要取的不是字串中的字元
                                                 if(Mode==VarMode.Mode.Intermediary||i>EgualIndex)
                                                     ResultsValue.ArrayResults(AS,RP,ValueArray,CountRecord,true,Array_Index);
-                                                else{
+                                                else
                                                     ArrayAddress=ResultsValue.ArrayResults(AS,RP,ValueArray,CountRecord,true,Array_Index);
-                                                }
                                             }else{
-                                                StringBuilder Temp=CountRecord.get(CountRecord.size()-1).get(CountRecord.
-                                                    get(CountRecord.size()-1).size()-1).Value,
-                                                        ASChar=StringScan.get_AShell_String_Character_Array(Temp,Array_Index);
+                                                if(i<=EgualIndex)
+                                                    throw new ArithmeticException("字串內的字元不可被更改");
+                                                StringBuilder Temp=CountRecord.get(CountRecord.size()-1).get(CountRecord.get(CountRecord.size()-1).size()-1).Value;
+                                                StringBuilder ASChar=StringScan.get_AShell_String_Character_Array(Temp,Array_Index);
+                                                
                                                 Temp.delete(0,Temp.length());
                                                 Temp.append(ASChar);
                                             }
