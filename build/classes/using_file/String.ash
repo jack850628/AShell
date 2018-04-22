@@ -132,6 +132,18 @@ class String
 				return Str..(" "*(Len-Str_Len))
 			endif
 		endfu
+		#更改字串內的字元
+		function setChar(char,index,string)
+			var new_string=""
+			for var i=0;i<String.strlen(string);i=i+1
+				if i!=index
+					new_string=new_string..string[i]
+				else
+					new_string=new_string..char
+				endif
+			endfo
+			return new_string
+		endfu
 		#KMP字串搜尋法
 		function KmpSearch(s,p)
 			var i=j=0
