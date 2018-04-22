@@ -158,7 +158,7 @@ public class AShell {
        }
        Run_Point RP = new Run_Point();
        CommandArray command=new CommandArray(fileName.getName());
-       command.add(new Command(new StringBuilder("using Stdio.ash"),0));
+       command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME),0));
        command.add(new Command(new StringBuilder("call "+fileName.getName()),0));
        Run run=new Run(ValueArray,command,RP);
            //RP.Run=run;這動作在建構式裡已經做過了

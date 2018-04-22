@@ -1,5 +1,6 @@
 
 import AShell.AShell;
+import AShell.AutoLibraryConfig;
 import AShell.CommandResolve.Command;
 import AShell.CommandResolve.CommandArray;
 import AShell.CommandResolve.StringScan;
@@ -19,10 +20,7 @@ public class interactive_Mode_Run {
         StringBuilder SB = null;
         String Com = null;
         //------------加入Stdio函式庫---------------
-        command.add(new Command(new StringBuilder("using Stdio.ash"),0));
-        command.add(new Command(new StringBuilder("native help(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
-        command.add(new Command(new StringBuilder("native exit(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
-        command.add(new Command(new StringBuilder("native ver(\"AShell.Native_Class.AShell_InteractiveModeFunction\")"),0));
+        command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME_FOR_INTRACTIVE_MODE),0));
         AS.ComLineRun(ValueArray,command);
         synchronized(this){
             try {
