@@ -9,6 +9,8 @@ class System
 		native setPath(JAVA_CLASS)
 		#取得目錄
 		native getPath(JAVA_CLASS)
+		#取得腳本檔案所在目錄
+		native getScriptFilePath(JAVA_CLASS)
 		#取得啟動時的參數
 		native getArgs(JAVA_CLASS)
 	endst

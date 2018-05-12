@@ -54,7 +54,7 @@ public class AShellType {
         }
         //-----------------------建構式(java to AShell用)-----------------------------
         public AShellType(String Str) throws Exception{//將java字串轉換成AShell字串，但是要放入AShell記憶體類型或boolean或null時用這個建構式，那麼也會被轉換成AShell字串，所以要放入AShell記憶體類型或AShell的boolean或AShell的null時請用put_AShell_Memory_Type或put_AShell_Boolean_Type或put_AShell_Null_Type或put_AShell_Type_Auto函數
-            this.AShell_Value = to_AShell_String(Str).toString();
+            this.AShell_Value = to_AShell_String(Str != null ? Str : "").toString();
             this.Type=java_Type.java_String;
         }
         public AShellType(char value){

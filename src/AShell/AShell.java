@@ -43,7 +43,7 @@ import java.util.LinkedHashSet;
 //import java.util.Properties;
 
 public class AShell {
-    private String version="1.1.9";
+    private String version="1.1.9.1";
     private boolean interactiveMode=false;//互動模式判斷
     Value_Array ValueArray=new Value_Array(null);
     private Thread_List ThreadList=new Thread_List();//執行續記錄清單，清單中都紀錄正在執行中的執行續
@@ -248,8 +248,8 @@ public class AShell {
                             break;
                         case 'c':
                             if(getText().startsWith(Code_String.CALL+" ")){
-                                if(scriptPath==null)//當scriptPath為null就代表呼叫cll的地方不再腳本區塊的最外層
-                                    throw new Exception("函數或類別中不可以使用call。");
+                                /*if(scriptPath==null)//當scriptPath為null就代表呼叫cll的地方不再腳本區塊的最外層
+                                    throw new Exception("函數或類別中不可以使用call。");*/
                                 StringBuilder FileName=new StringBuilder(scriptPath).append(PathType).append(getText().substring(Code_String.CALL.length()+1).trim());
                                 if(FileName.length()<4||!FileName.substring(FileName.length()-4, FileName.length()).equals(".ash"))
                                     FileName.append(".ash");
@@ -462,14 +462,18 @@ public class AShell {
             public Run_Point(){
                 this.index=Run_Point.count++;
             }
+            public String getScriptPath(){
+                return Run != null ? Run.scriptPath : null;
+            }
         }
-        public Run_Point Thread_Run(Value_Array ValueArray){//產生新的AShell執行續
+        public Run_Point Thread_Run(Value_Array ValueArray,Run_Point runPoint){//產生新的AShell執行續
              Run_Point RP=new Run_Point();
             CommandArray command=new CommandArray("Thread"+RP.index);
             //command.add(new CommandArray(new StringBuilder("Stdio.println(\"\\n\\nLog: \".."+Type_String.THIS+".run)")));
              command.add(new Command(new StringBuilder("run()"),0));
              Run run=new Run(ValueArray,command,RP);
              run.NotIsFunction=true;//設定為非函數執行狀態
+             run.scriptPath=runPoint.getScriptPath();
              RP.Run=run;
              //System.out.println("LOG1:"+ThreadList+" "+ThreadList.size());
              ThreadList.add(RP);
@@ -631,12 +635,13 @@ public class AShell {
                         com=new Com(this,ValueArray);
 		}*/
                 public Run(Value_Array ValueArray,CommandArray command,Run_Point RP){//function呼叫 與 互動式命令列界指令執行 與 AShell啟動時 使用
-                        this.ValueArray=ValueArray;
-                        this.command=command;
-                        this.BackThread=RP.Run;
-                        RP.Run=this;
-                        this.RP=RP;
-                        com=new Com(scriptPath,RP,this,ValueArray);
+                    this.scriptPath=RP.getScriptPath();
+                    this.ValueArray=ValueArray;
+                    this.command=command;
+                    this.BackThread=RP.Run;
+                    RP.Run=this;
+                    this.RP=RP;
+                    com=new Com(scriptPath,RP,this,ValueArray);
                 }
                 int getTag(CommandArray command,String tag){
                     int Number=-2;//會用-2是因為當標籤放在程式碼中第一行的話，在程式碼清單中會是第零行，然後讀出來會被減一所以會變成-1

@@ -29,6 +29,9 @@ public class AShell_System {
     public static AShellType getPath(AShell_this AShThis,AShellType[] Args) throws Exception{
             return new AShellType(AShThis.AS.RuningPath.toString());
     }
+    public static AShellType getScriptFilePath(AShell_this AShThis,AShellType[] Args) throws Exception{
+            return new AShellType(AShThis.RP.getScriptPath());
+    }
     public static AShellType getArgs(AShell_this AShThis,AShellType[] Args) throws Exception{
             return new AShellType().put_AShell_Memory_Type(AShThis.AS.AShellArgs.toString(),true);
     }
