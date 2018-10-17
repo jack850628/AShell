@@ -1,0 +1,3 @@
+EXPORTS
+    Java_AShell_CallSystem_System @1
+    Java_AShell_CallSystem_chdir @2

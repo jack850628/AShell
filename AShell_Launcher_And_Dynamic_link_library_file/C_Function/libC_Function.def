@@ -1,0 +1,3 @@
+EXPORTS
+    Java_CFunction_Cgetch @1
+    Java_CFunction_clearScreen @2
