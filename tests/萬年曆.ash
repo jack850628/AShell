@@ -13,7 +13,7 @@ function main()
  
     if month<=12&& month>=1
 		first_space=1
-        for var q=0;q<(year-1900);q=q+1
+        for (var q=0;q<(year-1900);q=q+1)
         
             if q%%4==0&& q%%100!=0|| q%%400==100
             
@@ -40,7 +40,7 @@ function main()
  
  
 		var i
-        for i=1;i<month;i=i+1
+        for (i=1;i<month;i=i+1)
         
             space[i+1]=(space[i]+days[i])%%7 
         endfo
@@ -49,11 +49,11 @@ function main()
  
         Stdio.printf("\t\t{0}年{1}月\n",{year,month}) 
         Stdio.print("\t日  一  二  三  四  五  六 \n\t") 
-        for var m=1;m<=space[i];m=m+1
+        for (var m=1;m<=space[i];m=m+1)
             Stdio.print("    ") 
         endfo
  
-        for var n=1;n<=days[i];n=n+1
+        for (var n=1;n<=days[i];n=n+1)
         
             Stdio.printf("{2:0}  ",{n}) 
  

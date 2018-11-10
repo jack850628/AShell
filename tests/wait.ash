@@ -7,7 +7,7 @@ var k=Threading()
 function a()
 	#call ioo
 	t.wait()
-	for var i=0;i<50;i=i+1
+	for (var i=0;i<50;i=i+1)
 		Stdio.println("a:"..i)
 		Thread.sleep(100)
 	endfo
@@ -15,7 +15,7 @@ function a()
 endfu
 t.start(a)
 #t.wait()
-for var i=0;i<20;i=i+1
+for (var i=0;i<20;i=i+1)
 	Stdio.println("main:"..i)
 	Thread.sleep(100)
 endfo

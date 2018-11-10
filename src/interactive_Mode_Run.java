@@ -29,31 +29,31 @@ public class interactive_Mode_Run {
         }
         command.clear();
         //---------------------------------------------------
-        while(true)command_read:{
-            System.out.print(SS.brackets!=0||SS.Annotation?"...":">>>");
-            String com_str = StringRead.Read();
-            do{
-                try {
-                    if((SB=SS.StrBlankDeal_with(com_str))!=null)
-                        Com=SB.toString();
-                    else if(com_str.matches("^\\s*$"))
-                            break command_read;//用來防止空白輸入造成的大間隔(空白輸出)
-                    else
-                        break;
-                } catch (Exception e) {
-                   AS.print.Print("錯誤！"+e.getMessage()+"\n");
-                   break command_read;
-                }
-                if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                    if(SS.add){//如果建立新指令為真
-                        SS.add=false;
-                        command.add(new Command(SB,LineNumbers));
-                    }else
-                        command.get(command.size()-1).Command.append(SB);
-                    SS.append=false;
-                }else
+        while(true){
+            if(StringRead.get_temp_strlen() == 0)
+                System.out.print(SS.brackets!=0||SS.Annotation?"...":">>>");
+            String com_str = StringRead.getString();
+            try {
+                if((SB=SS.StrBlankDeal_with(com_str))!=null)
+                    Com=SB.toString();
+                else
+                    continue;//用來防止空白輸入造成的大間隔(空白輸出)
+            } catch (Exception e) {
+                AS.print.Print("錯誤！"+e.getMessage()+"\n");
+                SS.line_end = true;
+                continue;
+            }
+            if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                if(SS.add){//如果建立新指令為真
+                    SS.add=false;
                     command.add(new Command(SB,LineNumbers));
-            }while(!SS.line_end);
+                }else
+                    command.get(command.size()-1).Command.append(SB);
+                SS.append=false;
+            }else
+                command.add(new Command(SB,LineNumbers));
+            StringRead.setString(com_str.substring(SS.get_command_char_index()));
+            SS.line_end = true;
             char ch=' ';
             try{
                 ch=Com.charAt(0);
@@ -63,111 +63,126 @@ public class interactive_Mode_Run {
                     System.out.println(Code_String.BREAK+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                 }else if(StringScan.startsWith(Com,Code_String.BEGIN)){
                             int setIf=0;
-                            while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(StringScan.startsWith(SB.toString(),Code_String.BEGIN))
+                                            setIf++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDBE))
+                                            if(setIf--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(StringScan.startsWith(SB.toString(),Code_String.BEGIN))
-                                    setIf++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDBE))
-                                    if(setIf--==0)
-                                         break;
                             }
                             ch=' ';
                     }else
                     ch=' ';
-            }else if(ch=='c'){
-                if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.CONTINUE)){
-                        System.out.println(Code_String.CONTINUE+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
-                }else if(Com.startsWith(Code_String.CLASS+" ")){
-                        int setCl=0;
-                        while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                }else if(ch=='c'){
+                    if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.CONTINUE)){
+                            System.out.println(Code_String.CONTINUE+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
+                    }else if(Com.startsWith(Code_String.CLASS+" ")){
+                            int setCl=0;
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(SB.toString().startsWith(Code_String.CLASS+" "))
+                                            setCl++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDCL))
+                                            if(setCl--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                            if(SB.toString().startsWith(Code_String.CLASS+" "))
-                                setCl++;
-                            else if(StringScan.startsWith(SB.toString(),Code_String.ENDCL))
-                                if(setCl--==0)
-                                    break;
-                        }
-                        ch=' ';
-		}else if(SS.brackets==0&&Com.startsWith(Code_String.CATCH+" ")){
-                            System.out.println(Code_String.CATCH+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
-                }else
-			ch=' ';
-            }else if(ch=='d'){
+                            }
+                            ch=' ';
+                    }else if(SS.brackets==0&&Com.startsWith(Code_String.CATCH+" ")){
+                                System.out.println(Code_String.CATCH+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
+                    }else
+                            ch=' ';
+                }else if(ch=='d'){
                     if(StringScan.startsWith(Com,Code_String.DO)){
                             int setDo=0;
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(StringScan.startsWith(SB.toString(),Code_String.DO))
+                                            setDo++;
+                                        else if(SB.toString().startsWith(Code_String.DWHILE+" "))
+                                            if(setDo--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(StringScan.startsWith(SB.toString(),Code_String.DO))
-                                    setDo++;
-                                else if(SB.toString().startsWith(Code_String.DWHILE+" "))
-                                    if(setDo--==0)
-                                         break;
                             }
                             ch=' ';
                     }else if(SS.brackets==0&&Com.startsWith(Code_String.DWHILE+" "))
@@ -192,35 +207,40 @@ public class interactive_Mode_Run {
             }else if(ch=='f'){
                     if(Com.startsWith(Code_String.FOR+" ")){
                             int setFor=0;
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(SB.toString().startsWith(Code_String.FOR+" "))
+                                            setFor++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDFO))
+                                            if(setFor--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(SB.toString().startsWith(Code_String.FOR+" "))
-                                    setFor++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDFO))
-                                    if(setFor--==0)
-                                         break;
                             }
                             ch=' ';
                     }else if(Com.startsWith(Code_String.FUNCTION+" ")){
@@ -239,53 +259,65 @@ public class interactive_Mode_Run {
                             isFirstFunction=true;//告知還在處理第一個函數
                         }
                         if(!matchFunctionLanbdaState){
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
-                                        }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
-                                }while(!SS.line_end);
-                                if(command.get(command.size()-1).Command.toString().startsWith(Code_String.FUNCTION+" ")){
-                                    try{
-                                        if(SS.brackets==0)//判斷是不是讀取到所有函數宣告式
-                                            matchFunctionLanbdaState=StringScan.matchFunctionLanbda(command.get(command.size()-1).Command);
-                                        else//如果沒有
-                                            continue;//繼續讀取
-                                    }catch(Exception e){
-                                        matchFunctionLanbdaState=false;
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
                                     }
-                                    if(matchFunctionLanbdaState){
-                                        if(isFirstFunction)
-                                            break;
-                                        else
-                                            continue;
-                                    }else
-                                        if(isFirstFunction){
-                                            isFirstFunction=false;
-                                            continue;//第一個函數式不需要將setFun加一
-                                        }
-                                    setFun++;
-                                }else if(StringScan.startsWith(command.get(command.size()-1).Command.toString(),Code_String.ENDFU))
-                                    if(setFun--==0)
-                                        break;
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
+                                        }else
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(command.get(command.size()-1).Command.toString().startsWith(Code_String.FUNCTION+" ")){
+                                            try{
+                                                if(SS.brackets==0)//判斷是不是讀取到所有函數宣告式
+                                                    matchFunctionLanbdaState=StringScan.matchFunctionLanbda(command.get(command.size()-1).Command);
+                                                else{//如果沒有
+                                                    StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                    SS.line_end = true;
+                                                    break block_while;//繼續讀取
+                                                }
+                                            }catch(Exception e){
+                                                matchFunctionLanbdaState=false;
+                                            }
+                                            if(matchFunctionLanbdaState){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                if(isFirstFunction)
+                                                    break while_loop;
+                                                else
+                                                    break block_while;
+                                            }else
+                                                if(isFirstFunction){
+                                                    isFirstFunction=false;
+                                                    StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                    SS.line_end = true;
+                                                    break block_while;//第一個函數式不需要將setFun加一
+                                                }
+                                            setFun++;
+                                        }else if(StringScan.startsWith(command.get(command.size()-1).Command.toString(),Code_String.ENDFU))
+                                            if(setFun--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
+                                }while(!SS.line_end);
                             }
                         }
                         ch=' ';
@@ -296,35 +328,40 @@ public class interactive_Mode_Run {
             }else if(ch=='i'){
                     if(Com.startsWith(Code_String.IF+" ")){
                             int setIf=0;
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(StringScan.startsWith(SB.toString(),Code_String.IF))
+                                            setIf++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDIF))
+                                            if(setIf--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(SB.toString().startsWith(Code_String.IF+" "))
-                                    setIf++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDIF))
-                                    if(setIf--==0)
-                                         break;
                             }
                             ch=' ';
                     }else
@@ -332,35 +369,40 @@ public class interactive_Mode_Run {
             }else if(ch=='t'){
                     if(StringScan.startsWith(Com,Code_String.TRY)){
                             int setTry=0;
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(StringScan.startsWith(SB.toString(),Code_String.TRY))
+                                            setTry++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDTR))
+                                            if(setTry--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(StringScan.startsWith(SB.toString(),Code_String.TRY))
-                                    setTry++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDTR))
-                                    if(setTry--==0)
-                                         break;
                             }
                             ch=' ';
                     }else
@@ -368,35 +410,40 @@ public class interactive_Mode_Run {
             }else if(ch=='w'){
                     if(Com.startsWith(Code_String.WHILE+" ")){
                             int setWh=0;
-                             while(true)block_while:{
-                                System.out.print("...");
-                                String command_str = StringRead.Read();
+                            while_loop:while(true)block_while:{
+                                if(StringRead.get_temp_strlen() == 0)
+                                    System.out.print("...");
+                                String command_str = StringRead.getString();
                                 do{
-                                try {
-                                    SB=SS.StrBlankDeal_with(command_str);
-                                    LineNumbers++;
-                                } catch (Exception e) {
-                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    break block_while;
-                                }
-                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(SB,LineNumbers));
+                                    try {
+                                        SB=SS.StrBlankDeal_with(command_str);
+                                        LineNumbers++;
+                                    } catch (Exception e) {
+                                        SS.line_end = true;
+                                        AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                        break block_while;
+                                    }
+                                    if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(SB,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(SB);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(SB);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(SB,LineNumbers));
-                                }else
-                                    break block_while;
+                                            command.add(new Command(SB,LineNumbers));
+                                        
+                                        if(SB.toString().startsWith(Code_String.WHILE+" "))
+                                            setWh++;
+                                        else if(StringScan.startsWith(SB.toString(),Code_String.ENDWH))
+                                            if(setWh--==0){
+                                                StringRead.setString(command_str.substring(SS.get_command_char_index()));
+                                                SS.line_end = true;
+                                                break while_loop;
+                                            }
+                                    }
                                 }while(!SS.line_end);
-                                if(SB.toString().startsWith(Code_String.WHILE+" "))
-                                    setWh++;
-                                else if(StringScan.startsWith(SB.toString(),Code_String.ENDWH))
-                                    if(setWh--==0)
-                                         break;
                             }
                             ch=' ';
                     }else

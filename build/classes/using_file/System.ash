@@ -1,17 +1,17 @@
 class System
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_System"
-		#µ²§ô§å¦¸°õ¦æ
+		#çµæŸæ‰¹æ¬¡åŸ·è¡Œ
 		native finish(JAVA_CLASS)
-		#©I¥s²×ºİ¾÷
+		#å‘¼å«çµ‚ç«¯æ©Ÿ
 		native system(JAVA_CLASS)
-		#¤Á´«¥Ø¿ı
+		#åˆ‡æ›ç›®éŒ„
 		native setPath(JAVA_CLASS)
-		#¨ú±o¥Ø¿ı
+		#å–å¾—ç›®éŒ„
 		native getPath(JAVA_CLASS)
-		#¨ú±o¸}¥»ÀÉ®×©Ò¦b¥Ø¿ı
+		#å–å¾—è…³æœ¬æª”æ¡ˆæ‰€åœ¨ç›®éŒ„
 		native getScriptFilePath(JAVA_CLASS)
-		#¨ú±o±Ò°Ê®Éªº°Ñ¼Æ
+		#å–å¾—å•Ÿå‹•æ™‚çš„åƒæ•¸
 		native getArgs(JAVA_CLASS)
 	endst
 endcl

@@ -14,13 +14,13 @@ function m(l,kk,i)
 	Stdio.println(i[1][0][1])
 	var j[2][3]
 	var k={1,2,3,4,5,6}
-	for var i=0,v=0;i<2;i=i+1
-		for var x=0;x<3;x=x+1,v=v+1
+	for (var i=0,v=0;i<2;i=i+1)
+		for (var x=0;x<3;x=x+1,v=v+1)
 			j[i][x]=k[v]
 		endfo
 	endfo
-	for var i=0,v=0;i<2;i=i+1
-		for var x=0;x<3;x=x+1,v=v+1
+	for (var i=0,v=0;i<2;i=i+1)
+		for (var x=0;x<3;x=x+1,v=v+1)
 			Stdio.println(j[i][x])
 		endfo
 	endfo

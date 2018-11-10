@@ -8,7 +8,7 @@ function subArray(array,from,to)#取得子陣列
 		throw "超出陣列範圍"
 	endif
 	var subArr[to-from]
-	for var i=from,j=0;i<to;i=i+1,j=j+1
+	for (var i=from,j=0;i<to;i=i+1,j=j+1)
 		subArr[j]=array[i]
 	endfo
 	return subArr
@@ -17,10 +17,10 @@ endfu
 function moveRight(arr,to)
 	var subarr1=subArray(arr,0,arr.size()-to),subarr2=subArray(arr,arr.size()-to,arr.size())
 	var i=0
-	for j=0;i<subarr2.size();i=i+1,j=j+1
+	for (j=0;i<subarr2.size();i=i+1,j=j+1)
 		arr[i]=subarr2[j]
 	endfo
-	for j=0;i<arr.size();i=i+1,j=j+1
+	for (j=0;i<arr.size();i=i+1,j=j+1)
 		arr[i]=subarr1[j]
 	endfo
 endfu

@@ -4,21 +4,21 @@ using Type
 class Stdio
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_Stdio"
-		#°ò¥»¿é¥X¨ç¼Æ
+		#åŸºæœ¬è¼¸å‡ºå‡½æ•¸
 		native print(JAVA_CLASS)
-		#°ò¥»¿é¥X¨ç¼Æ(´«¦æ)
+		#åŸºæœ¬è¼¸å‡ºå‡½æ•¸(æ›è¡Œ)
 		function println(str="") = print(str.."\n")
-		#®æ¦¡¤Æ¿é¥X
+		#æ ¼å¼åŒ–è¼¸å‡º
 		function printf(form,arr) = print(String.format(form,arr))
-		#°ò¥»¿ù»~¨ç¼Æ
+		#åŸºæœ¬éŒ¯èª¤å‡½æ•¸
 		native error(JAVA_CLASS)
-		#°ò¥»¿é¤J¨ç¼Æ
+		#åŸºæœ¬è¼¸å…¥å‡½æ•¸
 		native scan(JAVA_CLASS)
 		
 		function inputNumber() = Type.toDigital(scan())
-		#°ò¥»¨ú³æ¤@¦r¤¸¨ç¼Æ
+		#åŸºæœ¬å–å–®ä¸€å­—å…ƒå‡½æ•¸
 		native getch(JAVA_CLASS)
-		#²M°£µe­±
+		#æ¸…é™¤ç•«é¢
 		native clear(JAVA_CLASS)
 	endst
 endcl

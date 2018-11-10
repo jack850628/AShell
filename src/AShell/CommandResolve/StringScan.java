@@ -91,6 +91,9 @@ public class StringScan {
     public boolean line_end = false;
     
     private int command_char_index;
+    public int get_command_char_index(){
+        return command_char_index;
+    }
     public StringBuilder StrBlankDeal_with(String Str) throws Exception{
             if(line_end){
                 line_end = false;
@@ -115,9 +118,8 @@ public class StringScan {
 				Annotation=false;
                             }
                             continue;//會在這裡是因為會進來這裡就代表著註解已經開始了，所以掃描到的*一定是在註解中，一定要去除
-			}else if(str.equals(";")&&!Annotation&&!Str.matches("^\\s*"+Code_String.FOR+" .*$")){
+			}else if(str.equals(";")&&!Annotation&&brackets == 0){
                             command_char_index++;
-                            add=true;
                             return SB;
 			}else if(str.equals("(")&&!Annotation){
                             if(brackets++==0&&!append)//如果這是第一個括弧 且 前面沒有遇到其他括弧區間的結尾

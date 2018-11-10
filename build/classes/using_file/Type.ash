@@ -11,42 +11,42 @@ class Type
 		var NFUNCTION = 7
 		var ARRAY     = 8
 		var NULL      = 9
-		#¨ú±oAShell¸ê®ÆÃş«¬
+		#å–å¾—AShellè³‡æ–™é¡å‹
 		native getType(JAVA_CLASS)
-		#§PÂ_°Ñ¼Æ¬O§_¬°¾ã¼Æ
+		#åˆ¤æ–·åƒæ•¸æ˜¯å¦ç‚ºæ•´æ•¸
 		function isInteger(digital)
 			if !isDigital(digital)
 				return false
 			endif
 			return digital%1==0
 		endfu
-		#§PÂ_°Ñ¼Æ¬O§_¬°¯BÂI¼Æ
+		#åˆ¤æ–·åƒæ•¸æ˜¯å¦ç‚ºæµ®é»æ•¸
 		function isFloat(digital)
 			if !isDigital(digital)
 				return false
 			endif
 			return digital%1!=0
 		endfu
-		#§PÂ_°Ñ¼Æ¬O§_¬°¼Æ¦r
+		#åˆ¤æ–·åƒæ•¸æ˜¯å¦ç‚ºæ•¸å­—
 		function isDigital(digital)
 			if digital==0
 				return true
 			endif
 			return digital==toDigital(digital)
 		endfu
-		#§PÂ_°Ñ¼Æ¬O§_¬°¦r¦ê
+		#åˆ¤æ–·åƒæ•¸æ˜¯å¦ç‚ºå­—ä¸²
 		function isString(digital)
 			return !isDigital(digital)
 		endfu
-		#±N¯BÂI¼ÆÂà´«¦¨¾ã¼Æ
+		#å°‡æµ®é»æ•¸è½‰æ›æˆæ•´æ•¸
 		function toInteger(float)
 			return toDigital(float)//1
 		endfu
-		#±N°Ñ¼ÆÂà´«¦¨¦r¦ê
+		#å°‡åƒæ•¸è½‰æ›æˆå­—ä¸²
 		function toString(arg)
 			return arg..""
 		endfu
-		#±N°Ñ¼ÆÂà´«¦¨¼Æ¦r
+		#å°‡åƒæ•¸è½‰æ›æˆæ•¸å­—
 		native toDigital(JAVA_CLASS)
 	endst
 endcl

@@ -1,14 +1,14 @@
  using Type.ash
 
-/*¦r¦ê³B²z¨ç¼Æ«Å§i*/
+/*å­—ä¸²è™•ç†å‡½æ•¸å®£å‘Š*/
 class String
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_String"
-		#¨ú±o¦r¦êªø«×
+		#å–å¾—å­—ä¸²é•·åº¦
 		native strlen(JAVA_CLASS)
-		#¨ú±o¦r¦ê¤¤ªº¤@­Ó¦r¤¸
+		#å–å¾—å­—ä¸²ä¸­çš„ä¸€å€‹å­—å…ƒ
 		native charAt(JAVA_CLASS)
-		#±N¦r¦ê¥H¬Y­Ó¦r¤¸°µ¤À³Î
+		#å°‡å­—ä¸²ä»¥æŸå€‹å­—å…ƒåšåˆ†å‰²
 		function split(str1,str2)
 			if str2==""||str2==null
 				return split_is_enpty(str1)
@@ -16,10 +16,10 @@ class String
 				return split_no_enpty(str1,str2)
 			endif
 		endfu
-		#·ístr2¤£¬O""©Înull®Éªº¤À³Î¤è¦¡
+		#ç•¶str2ä¸æ˜¯""æˆ–nullæ™‚çš„åˆ†å‰²æ–¹å¼
 		function split_no_enpty(str1,str2)
 			var str1_len=strlen(str1),index=1
-			for var i=0;i<str1_len;i=i+1#¨ú±o»İ­n²£¥Íªº°}¦Cªø«×
+			for (var i=0;i<str1_len;i=i+1)#å–å¾—éœ€è¦ç”¢ç”Ÿçš„é™£åˆ—é•·åº¦
 				if str1[i]==str2
 					index=index+1
 				endif
@@ -27,7 +27,7 @@ class String
 			var arr[index],buffer
 			arr[0]=""
 			index=0
-			for var i=0;i<str1_len;i=i+1
+			for (var i=0;i<str1_len;i=i+1)
 				buffer=str1[i]
 				if buffer==str2
 					index=index+1
@@ -37,47 +37,47 @@ class String
 				endif
 			endfo
 			return arr
-		endfu#·ístr2¬O""©Înull®Éªº¤À³Î¤è¦¡
+		endfu#ç•¶str2æ˜¯""æˆ–nullæ™‚çš„åˆ†å‰²æ–¹å¼
 		function split_is_enpty(str1)
 			var str1_len=strlen(str1)
 			var arr[str1_len]
-			for var i=0;i<str1_len;i=i+1
+			for (var i=0;i<str1_len;i=i+1)
 				arr[i]=str1[i]
 			endfo
 			return arr
 		endfu
-		#§PÂ_¦r¦ê¬O§_¥H¬Y­Ó¦r¦ê¬°¶}©l
+		#åˆ¤æ–·å­—ä¸²æ˜¯å¦ä»¥æŸå€‹å­—ä¸²ç‚ºé–‹å§‹
 		function startsWith(str1,str2)
 			var str1_len=strlen(str1),str2_len=strlen(str2)
 			if str1_len<str2_len
 				return false
 			endif
-			for var i=0;i<str2_len;i=i+1
+			for (var i=0;i<str2_len;i=i+1)
 				if str1[i]!=str2[i]
 					return false
 				endif
 			endfo
 			return true
 		endfu
-		#§PÂ_¦r¦ê¬O§_¥H¬Y­Ó¦r¦ê¬°µ²§ô
+		#åˆ¤æ–·å­—ä¸²æ˜¯å¦ä»¥æŸå€‹å­—ä¸²ç‚ºçµæŸ
 		function endsWith(str1,str2)
 			var str1_len=strlen(str1),str2_len=strlen(str2)
 			if str1_len<str2_len
 				return false
 			endif
-			for var i=0,j=str1_len-str2_len;i<str2_len;i=i+1,j=j+1
+			for (var i=0,j=str1_len-str2_len;i<str2_len;i=i+1,j=j+1)
 				if str1[j]!=str2[i]
 					return false
 				endif
 			endfo
 			return true
 		endfu
-		#®æ¦¡¤Æ¦r¦ê¡A¨Ï¥Î{}»yªk¡A{0}¥Nªí²Ä0­Ó°Ñ¼Æ¡A{5:0}¥Nªí²Ä0­Ó°Ñ¼Æ¦Ü¤Ö5®æ¨Ã¾a¥k¡A{-5:0}¥Nªí²Ä0­Ó°Ñ¼Æ¦Ü¤Ö5®æ¨Ã¾a¥ª
+		#æ ¼å¼åŒ–å­—ä¸²ï¼Œä½¿ç”¨{}èªæ³•ï¼Œ{0}ä»£è¡¨ç¬¬0å€‹åƒæ•¸ï¼Œ{5:0}ä»£è¡¨ç¬¬0å€‹åƒæ•¸è‡³å°‘5æ ¼ä¸¦é å³ï¼Œ{-5:0}ä»£è¡¨ç¬¬0å€‹åƒæ•¸è‡³å°‘5æ ¼ä¸¦é å·¦
 		function format(form,arr)
 			var buffer=""
 			var temp
 			var length=strlen(form)
-			for var i=0;i<length;i=i+1
+			for (var i=0;i<length;i=i+1)
 				temp=form[i]
 				if temp=="{"
 					if form[i+1]=="{"
@@ -101,7 +101,7 @@ class String
 					index=Type.toDigital(index)
 					Str_Len=Type.toDigital(Str_Len)
 					if index>arr.size()||index<0
-						throw "¶W¥X¤Ş¼Æ½d³ò"
+						throw "è¶…å‡ºå¼•æ•¸ç¯„åœ"
 					endif
 					buffer=buffer..Align(arr[index],Str_Len)
 				elseif temp=="}"
@@ -109,7 +109,7 @@ class String
 						i=i+1
 						buffer=buffer.."}"
 					else
-						throw "¤j¬A¸¹¤£¹ïºÙ"
+						throw "å¤§æ‹¬è™Ÿä¸å°ç¨±"
 					endif
 				else
 					buffer=buffer..temp
@@ -117,10 +117,10 @@ class String
 			endfo
 			return buffer
 		endfu
-		#¦r¦ê¹ï»ô
+		#å­—ä¸²å°é½Š
 		function Align(Str,Len)
 			var Str_Len=String.strlen(Type.toString(Str))
-			var Front=Len>=0#¬O§_¬°«e­±ªÅ¥Õ
+			var Front=Len>=0#æ˜¯å¦ç‚ºå‰é¢ç©ºç™½
 			if !Front
 				Len=-Len
 			endif
@@ -132,10 +132,10 @@ class String
 				return Str..(" "*(Len-Str_Len))
 			endif
 		endfu
-		#§ó§ï¦r¦ê¤ºªº¦r¤¸
+		#æ›´æ”¹å­—ä¸²å…§çš„å­—å…ƒ
 		function setChar(char,index,string)
 			var new_string=""
-			for var i=0;i<String.strlen(string);i=i+1
+			for (var i=0;i<String.strlen(string);i=i+1)
 				if i!=index
 					new_string=new_string..string[i]
 				else
@@ -144,7 +144,7 @@ class String
 			endfo
 			return new_string
 		endfu
-		#KMP¦r¦ê·j´Mªk
+		#KMPå­—ä¸²æœå°‹æ³•
 		function KmpSearch(s,p)
 			var i=j=0
 			var slen=strlen(s)
@@ -168,20 +168,20 @@ class String
 				return -1
 			endif
 		endfu
-		#¨ú±o¥¢°tªí
-		/*¥Hp=abcdabd¬°¨Ò
-		¤@¶}©lk=-1 j=0
-		k=-1©Ò¥Hk++ j++µM«á¦]¬°p[j]!=p[k] => p[1]!=p[0](b!=a)©Ò¥Hnext[j]=k => next[1]=0
-		±µ¤U¨Ók=0 j=1¦]¬°p[j]!=p[k](b!=a)©Ò¥H¶ielse k=next[k] => k=next[0] => k=-1
-		µM«á k==-1©Ò¥Hk++ j++ µM«á¦]¬°p[j]!=p[k] => p[2]!=p[0](c!=a)©Ò¥Hnext[j]=k => next[2]=0
-		µM«á k=0 j=2 ¦]¬°p[j]!=p[k](c!=a)©Ò¥H¶ielse k=next[k] => k=next[0] => k=-1
-		µM«á k==-1©Ò¥Hk++ j++ µM«á¦]¬°p[j]!=p[k] => p[3]!=p[0](d!=a)©Ò¥Hnext[j]=k => next[3]=0
-		µM«á k=0 j=3 ¦]¬°p[j]!=p[k](d!=a)©Ò¥H¶ielse k=next[k] => k=next[0] => k=-1
-		µM«á k==-1©Ò¥Hk++ j++ µM«á¦]¬°p[j]==p[k] => p[4]==p[0](a==a)©Ò¥Hnext[j]=next[k] => next[4]=next[0] => next[4]=-1
-		µM«á k=0 j=4 ¦]¬°p[j]==p[k](a==a)©Ò¥H k++ j++ µM«á¦]¬°p[j]==p[k] => p[5]==p[1](b==b)©Ò¥Hnext[j]=next[k] => next[5]=next[1] => next[5]=0
-		µM«á k=1 j=5 ¦]¬°p[j]==p[k](b==b)©Ò¥H k++ j++ µM«á¦]¬°p[j]!=p[k] => p[6]!=p[2](c!=d)©Ò¥Hnext[j]=k => next[6]=2
-		µM«á k=2 j=6 ¦ı¬O¦]¬°while j<plen-1 => while 6<7-1 ©Ò¥H¸õ¥X
-		«hnext¬°{-1,0,0,0,-1,0,2}
+		#å–å¾—å¤±é…è¡¨
+		/*ä»¥p=abcdabdç‚ºä¾‹
+		ä¸€é–‹å§‹k=-1 j=0
+		k=-1æ‰€ä»¥k++ j++ç„¶å¾Œå› ç‚ºp[j]!=p[k] => p[1]!=p[0](b!=a)æ‰€ä»¥next[j]=k => next[1]=0
+		æ¥ä¸‹ä¾†k=0 j=1å› ç‚ºp[j]!=p[k](b!=a)æ‰€ä»¥é€²else k=next[k] => k=next[0] => k=-1
+		ç„¶å¾Œ k==-1æ‰€ä»¥k++ j++ ç„¶å¾Œå› ç‚ºp[j]!=p[k] => p[2]!=p[0](c!=a)æ‰€ä»¥next[j]=k => next[2]=0
+		ç„¶å¾Œ k=0 j=2 å› ç‚ºp[j]!=p[k](c!=a)æ‰€ä»¥é€²else k=next[k] => k=next[0] => k=-1
+		ç„¶å¾Œ k==-1æ‰€ä»¥k++ j++ ç„¶å¾Œå› ç‚ºp[j]!=p[k] => p[3]!=p[0](d!=a)æ‰€ä»¥next[j]=k => next[3]=0
+		ç„¶å¾Œ k=0 j=3 å› ç‚ºp[j]!=p[k](d!=a)æ‰€ä»¥é€²else k=next[k] => k=next[0] => k=-1
+		ç„¶å¾Œ k==-1æ‰€ä»¥k++ j++ ç„¶å¾Œå› ç‚ºp[j]==p[k] => p[4]==p[0](a==a)æ‰€ä»¥next[j]=next[k] => next[4]=next[0] => next[4]=-1
+		ç„¶å¾Œ k=0 j=4 å› ç‚ºp[j]==p[k](a==a)æ‰€ä»¥ k++ j++ ç„¶å¾Œå› ç‚ºp[j]==p[k] => p[5]==p[1](b==b)æ‰€ä»¥next[j]=next[k] => next[5]=next[1] => next[5]=0
+		ç„¶å¾Œ k=1 j=5 å› ç‚ºp[j]==p[k](b==b)æ‰€ä»¥ k++ j++ ç„¶å¾Œå› ç‚ºp[j]!=p[k] => p[6]!=p[2](c!=d)æ‰€ä»¥next[j]=k => next[6]=2
+		ç„¶å¾Œ k=2 j=6 ä½†æ˜¯å› ç‚ºwhile j<plen-1 => while 6<7-1 æ‰€ä»¥è·³å‡º
+		å‰‡nextç‚º{-1,0,0,0,-1,0,2}
 		*/
 		function GetNext(p,next)
 			var plen=String.strlen(p)
@@ -195,7 +195,7 @@ class String
 					if p[j]!=p[k]
 						next[j]=k
 					else
-						#¦]¬°¤£¯à¥X²{p[j] = p[ next[j ]]¡A©Ò¥H·í¥X²{®É»İ­nÄ~Äò»¼Âk¡Ak = next[k] = next[next[k]] 
+						#å› ç‚ºä¸èƒ½å‡ºç¾p[j] = p[ next[j ]]ï¼Œæ‰€ä»¥ç•¶å‡ºç¾æ™‚éœ€è¦ç¹¼çºŒéæ­¸ï¼Œk = next[k] = next[next[k]] 
 						next[j]=next[k]
 					endif
 				elseif p[j]==p[k]
@@ -204,7 +204,7 @@ class String
 					if p[j]!=p[k]
 						next[j]=k
 					else
-						#¦]¬°¤£¯à¥X²{p[j] = p[ next[j ]]¡A©Ò¥H·í¥X²{®É»İ­nÄ~Äò»¼Âk¡Ak = next[k] = next[next[k]] 
+						#å› ç‚ºä¸èƒ½å‡ºç¾p[j] = p[ next[j ]]ï¼Œæ‰€ä»¥ç•¶å‡ºç¾æ™‚éœ€è¦ç¹¼çºŒéæ­¸ï¼Œk = next[k] = next[next[k]] 
 						next[j]=next[k]
 					endif
 				else

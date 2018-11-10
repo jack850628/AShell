@@ -43,7 +43,7 @@ import java.util.LinkedHashSet;
 //import java.util.Properties;
 
 public class AShell {
-    private String VERSTION="1.1.9.1";
+    private String VERSTION="1.1.9.2";
     private final String PATH_TYPE="\\";//資料夾分隔符號類型
     private final String AShell_LIBRARIES_PATH = "C:\\AShell\\using_file";
     private final String NATIVE_URL_PATH = "C:\\AShell\\";

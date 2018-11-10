@@ -4,7 +4,7 @@ using System.ash
 
 function main()
 	try
-		for var i=0;i<2;i=i+1
+		for (var i=0;i<2;i=i+1)
 			try
 				if true
 					class E
@@ -26,7 +26,7 @@ function main()
 	catch e
 		Stdio.println(e)
 	finally
-		Stdio.println("Á`¬O°õ¦æ")
+		Stdio.println("Ã`Â¬OÂ°ÃµÂ¦Ã¦")
 	endtr
 	#throw ~E("YEE")
 	System.system("pause")

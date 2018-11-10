@@ -8,13 +8,13 @@ class th:Threading
 		#npcall poi
 	endfu
 	function run()
-		for var i=0;i<10;i=i+1
+		for (var i=0;i<10;i=i+1)
 			Stdio.println(i)
 		endfo
 		System.system("pause")
 	endfu
 endcl
 th().start()
-for var i=0;i<10;i=i+1
+for (var i=0;i<10;i=i+1)
 			Stdio.println(i.."?")
 endfo

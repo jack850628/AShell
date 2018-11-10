@@ -7,7 +7,7 @@ function COMBI(
 	n
 	) 
 	var p=1
-    for var i = 1; i <= n; i = i + 1
+    for (var i = 1; i <= n; i = i + 1)
         p = p * (r - i + 1) / i
 	endfo
     return p

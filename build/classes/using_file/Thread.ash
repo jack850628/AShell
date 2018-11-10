@@ -1,9 +1,9 @@
 class Thread
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_Thread"
-		#¼È°±°õ¦æ
+		#æš«åœåŸ·è¡Œ
 		native sleep(JAVA_CLASS)
-		#¼È°±°õ¦æÄò°õ¦æ
+		#æš«åœåŸ·è¡ŒçºŒåŸ·è¡Œ
 		native pause(JAVA_CLASS)
 	endst
 endcl

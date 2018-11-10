@@ -1,17 +1,17 @@
 class Math
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_Math"
-		#Âà¾ã¼Æ
+		#è½‰æ•´æ•¸
 		function toint(arg)
 			arg=(arg//1)
 			return arg
 		endfu
-		#¥|±Ë¤­¤J
+		#å››æ¨äº”å…¥
 		function round(arg)
 			arg=(arg+0.5)
 			return base.toint(arg)
 		endfu
-		#¨úµ´¹ï­È
+		#å–çµ•å°å€¼
 		function abs(arg)
 			if arg<0
 				return (arg*-1)
@@ -19,9 +19,9 @@ class Math
 				return arg
 			endif
 		endfu
-		#¨ú¶Ã¼Æ
+		#å–äº‚æ•¸
 		native rand(JAVA_CLASS)
-		#¨ú³Ì¤j­È
+		#å–æœ€å¤§å€¼
 		function max(ar1,ar2)
 			if ar1>ar2
 				return ar1
@@ -31,7 +31,7 @@ class Math
 				return ar1
 			endif
 		endfu
-		#¨ú³Ì¤p­È
+		#å–æœ€å°å€¼
 		function min(ar1,ar2)
 			if ar1<ar2
 				return ar1
@@ -41,7 +41,7 @@ class Math
 				return ar1
 			endif
 		endfu
-		#¨ú¶O¤ó«Y¼Æ
+		#å–è²»æ°ä¿‚æ•¸
 		function fid(n,curr=0,next=1)
 			if n==0
 				return curr
@@ -49,7 +49,7 @@ class Math
 				return fid((n-1),next,(curr+next))
 			endif
 		endfu
-		#¨ú¦¸¤è
+		#å–æ¬¡æ–¹
 		function pow(ar1,ar2)
 			if ar2<0
 				return "error!"
@@ -64,11 +64,11 @@ class Math
 		function sqrt(a,b)
 			return a**(1/b)
 		endfu
-		#¨ú¶ê©P²v
+		#å–åœ“å‘¨ç‡
 		function getPI()
 			return 3.14
 		endfu
-		/*#¶¥­¼
+		/*#éšä¹˜
 		function factorial(n)
 			if n==0
 				return 1
