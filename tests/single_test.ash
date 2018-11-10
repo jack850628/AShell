@@ -1,0 +1,1 @@
+using Thread;Stdio.print("p");;Stdio.print("o");;;;for (var i=0;i<2;i=i+1);Stdio.print(i);endfo;Thread.pause();;;;
