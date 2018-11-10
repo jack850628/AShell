@@ -27,7 +27,7 @@ public class AShell_InteractiveModeFunction {
                           +"  / /| | \\__ \\/ __ \\/ _ \\/ / /\n"
                           +" / ___ |___/ / / / /  __/ / /\n"
                           +"/_/  |_/____/_/ /_/\\___/_/_/ \n"
-                          +"(c)copyright 2017 jack850628 "+AShThis.AS.getVar());
+                          +"(c)copyright 2018 jack850628 "+AShThis.AS.getVar());
         return new AShellType();
     }
 }

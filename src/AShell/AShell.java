@@ -43,7 +43,11 @@ import java.util.LinkedHashSet;
 //import java.util.Properties;
 
 public class AShell {
-    private String version="1.1.9.1";
+    private String VERSTION="1.1.9.1";
+    private final String PATH_TYPE="\\";//資料夾分隔符號類型
+    private final String AShell_LIBRARIES_PATH = "C:\\AShell\\using_file";
+    private final String NATIVE_URL_PATH = "C:\\AShell\\";
+    
     private boolean interactiveMode=false;//互動模式判斷
     Value_Array ValueArray=new Value_Array(null);
     private Thread_List ThreadList=new Thread_List();//執行續記錄清單，清單中都紀錄正在執行中的執行續
@@ -52,7 +56,6 @@ public class AShell {
     private final LinkedHashSet<URL> NativeURLPath=new LinkedHashSet<>();//Native Class來源路徑
     private final HashMap<String,Class> javaClass=new HashMap<>();//已經載入java clss
     //public final String Sound_Path="C:\\AShell\\AShell\\sound";
-    private final String PathType="\\";//資料夾分隔符號類型
     //private final int SystemPathType=3;//作業系統磁碟跟目錄文字長度，例如Windows的C:\長度是3，Linux則是 / 長度是1
     public StringBuilder AShellArgs;//儲存呼叫AShell腳本時候的參數陣列
     //-----------------------------------IO--------------------------------------------------
@@ -69,14 +72,14 @@ public class AShell {
         this.stop=stop;
         this.read=read;
         this.clear=clear;
-        AShellLibrariesPath.add("C:\\AShell\\using_file");
+        AShellLibrariesPath.add(AShell_LIBRARIES_PATH);
         try{
-            NativeURLPath.add(new File("C:\\AShell\\").toURL());
+            NativeURLPath.add(new File(NATIVE_URL_PATH).toURL());
         }catch(MalformedURLException e){}
         //----------------------------------------------將base主類別加入記憶體清單中-----------------------------------------------------//
         Class_Type base = new Class_Type(null);
         base.ValueArray=ValueArray;
-        ValueArray.add(new Value(new StringBuilder("base"),Memory_Management.Object_Builder(base,1)));
+        ValueArray.add(new Value(new StringBuilder(Code_String.BASE),Memory_Management.Object_Builder(base,1)));
         //----------------------------------------------------------------------------------------------------------------------------------------------//
         //----------------------------------------------將參數主類別加入記憶體清單中----------------------------------------------------//
         if(args!=null){
@@ -102,7 +105,7 @@ public class AShell {
         return ValueArray;
     }
     public String getVar(){
-        return "Ver:"+version;
+        return "Ver:"+VERSTION;
     }
     private String Read(int mode){
         return read.Rand(mode);
@@ -158,8 +161,8 @@ public class AShell {
        }
        Run_Point RP = new Run_Point();
        CommandArray command=new CommandArray(fileName.getName());
-       command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME),0));
-       command.add(new Command(new StringBuilder("call "+fileName.getName()),0));
+       command.add(new Command(new StringBuilder(Code_String.USING+" "+AutoLibraryConfig.LIBRARY_NAME),0));
+       command.add(new Command(new StringBuilder(Code_String.CALL+" "+fileName.getName()),0));
        Run run=new Run(ValueArray,command,RP);
            //RP.Run=run;這動作在建構式裡已經做過了
        run.scriptPath=RuningPath.toString();
@@ -250,7 +253,7 @@ public class AShell {
                             if(getText().startsWith(Code_String.CALL+" ")){
                                 /*if(scriptPath==null)//當scriptPath為null就代表呼叫cll的地方不再腳本區塊的最外層
                                     throw new Exception("函數或類別中不可以使用call。");*/
-                                StringBuilder FileName=new StringBuilder(scriptPath).append(PathType).append(getText().substring(Code_String.CALL.length()+1).trim());
+                                StringBuilder FileName=new StringBuilder(scriptPath).append(PATH_TYPE).append(getText().substring(Code_String.CALL.length()+1).trim());
                                 if(FileName.length()<4||!FileName.substring(FileName.length()-4, FileName.length()).equals(".ash"))
                                     FileName.append(".ash");
                                 if(!ValueArray.UsingAndCallTable.contains(FileName.toString())){
@@ -361,7 +364,7 @@ public class AShell {
                                 }
                                 new VarStrDW(AShell.this,RP,ANR.Name.toString()+"="+Memory_Management.Native_Function_Builder(new Native_Function(Java_Function,ValueArray.Reference(),instance_java_Class)),ValueArray,VarMode.Mode.Var);
                             /*}else if(getText().startsWith("npcall ")){
-                                String FireName=path.toString()+PathType+getText().substring(7).trim();
+                                String FireName=path.toString()+PATH_TYPE+getText().substring(7).trim();
                                 if(new File(FireName).isFile()||new File(FireName+=".ash").isFile()){
                                     Run_Point RP=new Run_Point();
                                     Run run=new Run(new FileReader(FireName),RP,ValueListSet.ListSet(new Value_Array(null), ValueArray),true);
@@ -391,7 +394,7 @@ public class AShell {
                                     //System.out.println(e.getLocalizedMessage());
                                     throw new Exception("未發現檔名為'"+getText().substring(6).trim()+"'的內建腳本檔。");
                                 }*/
-                                StringBuilder FileName=new StringBuilder(PathType).append(getText().substring(Code_String.USING.length()+1).trim());
+                                StringBuilder FileName=new StringBuilder(PATH_TYPE).append(getText().substring(Code_String.USING.length()+1).trim());
                                 if(FileName.length()<4||!FileName.substring(FileName.length()-4, FileName.length()).equals(".ash"))
                                     FileName.append(".ash");
                                 int index=1;
@@ -576,18 +579,20 @@ public class AShell {
                             int LineNumbers=1;
                             //System.out.println("S---------------------------------------------------");
                             while((s=br.readLine())!=null){//讀批次檔
-                                Com=SS.StrBlankDeal_with(s);
-                                if(Com!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                        if(SS.add){//如果建立新指令為真
-                                            SS.add=false;
-                                            command.add(new Command(Com,LineNumbers));
+                                do{
+                                    Com=SS.StrBlankDeal_with(s);
+                                    if(Com!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                        if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                            if(SS.add){//如果建立新指令為真
+                                                SS.add=false;
+                                                command.add(new Command(Com,LineNumbers));
+                                            }else
+                                                command.get(command.size()-1).Command.append(Com);
+                                            SS.append=false;
                                         }else
-                                            command.get(command.size()-1).Command.append(Com);
-                                        SS.append=false;
-                                    }else
-                                        command.add(new Command(Com,LineNumbers));
-                                }
+                                            command.add(new Command(Com,LineNumbers));
+                                    }
+                                }while(!SS.line_end);
                                 LineNumbers++;
                             }
                             fr.close();

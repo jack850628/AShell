@@ -1,5 +1,6 @@
 package AShell.CommandResolve;
 
+import AShell.Data_Type_And_Struct.Code_String;
 import AShell.Data_Type_And_Struct.Type_String;
 import java.util.ArrayList;
 
@@ -87,26 +88,37 @@ public class StringScan {
     public boolean Annotation=false;//跨行註解判斷值
     public int brackets=0;//判斷括弧數量
     public boolean add=false,append=false;//判斷指令是要add在陣列中還是要abbend在上一個指令後
+    public boolean line_end = false;
+    
+    private int command_char_index;
     public StringBuilder StrBlankDeal_with(String Str) throws Exception{
+            if(line_end){
+                line_end = false;
+                command_char_index = 0;
+            }
             StringBuilder SB=null;
 		boolean Ignore=true;//空白過濾變數，如果為true就代表還沒遇上程式碼
-		for(int i=0;i<Str.length();i++){
-                    String str=Str.substring(i, i+1);
+		for(;command_char_index<Str.length();command_char_index++){
+                    String str=Str.substring(command_char_index, command_char_index+1);
                     //System.out.print(str);
 			if(str.equals("#")&&!Annotation){
 				break;
 			}else if(str.equals("/")&&!Annotation){
-                            if(i+1<Str.length()&&Str.substring(i+1, i+2).equals("*")){
-                                i++;
+                            if(command_char_index+1<Str.length()&&Str.substring(command_char_index+1, command_char_index+2).equals("*")){
+                                command_char_index++;
 				Annotation=true;
 				continue;//會在這裡是因為如果/不是註解的話那就不能被去除掉
                             }
 			}else if(str.equals("*")&&Annotation){
-                            if(i+1<Str.length()&&Str.substring(i+1, i+2).equals("/")){
-                                i++;
+                            if(command_char_index+1<Str.length()&&Str.substring(command_char_index+1, command_char_index+2).equals("/")){
+                                command_char_index++;
 				Annotation=false;
                             }
                             continue;//會在這裡是因為會進來這裡就代表著註解已經開始了，所以掃描到的*一定是在註解中，一定要去除
+			}else if(str.equals(";")&&!Annotation&&!Str.matches("^\\s*"+Code_String.FOR+" .*$")){
+                            command_char_index++;
+                            add=true;
+                            return SB;
 			}else if(str.equals("(")&&!Annotation){
                             if(brackets++==0&&!append)//如果這是第一個括弧 且 前面沒有遇到其他括弧區間的結尾
                                 add=true;//那就代表著是一個新的指令
@@ -135,9 +147,9 @@ public class StringScan {
                                         }
 					SB.append(str);
                                         while(true){
-                                            i++;
+                                            command_char_index++;
                                             try{
-                                                str=Str.substring(i, i+1);
+                                                str=Str.substring(command_char_index, command_char_index+1);
                                             }catch(Exception e){
                                                 throw new Exception("語法錯誤，字串沒有結束");
                                             }
@@ -145,12 +157,12 @@ public class StringScan {
                                             if(str.equals("\"")){
                                                 break;
                                             }else if(str.equals("\\"))
-                                                SB.append(Str.substring(++i, i+1));
+                                                SB.append(Str.substring(++command_char_index, command_char_index+1));
                                         }
                                         continue;
 				}
 			}
-			if(!Ignore||!str.equals(" ")&&!str.equals("")&&!str.equals("	")){
+			if(!Ignore||!str.matches("\\s")){
 				if(Ignore){
                                     SB=new StringBuilder();
                                     Ignore=false;
@@ -159,6 +171,7 @@ public class StringScan {
 			}
 		}
                 //System.out.println();
+                line_end = true;
                 return SB;
 	}
     /*判斷指令是要使用var還是使用StrDW，判斷原理是這行程式碼是否有單一 =*/

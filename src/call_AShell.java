@@ -43,7 +43,7 @@ public class call_AShell {
                               +"  / /| | \\__ \\/ __ \\/ _ \\/ / /\n"
                               +" / ___ |___/ / / / /  __/ / /\n"
                               +"/_/  |_/____/_/ /_/\\___/_/_/ \n"
-                              +"(c)copyright 2017 jack850628 "+AS.getVar()
+                              +"(c)copyright 2018 jack850628 "+AS.getVar()
                               +"\n如果不知道如何使用，可以輸入help()來查看用法:)\n");
              /*System.out.print("\n\n請按任意鍵結束. . .");
             CFunction.Cgetch();*/

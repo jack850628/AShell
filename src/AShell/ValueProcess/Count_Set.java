@@ -578,7 +578,7 @@ public class Count_Set {
                                 }else{
                                     if(!item2.equals(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(Code_String.IS+"|==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -595,7 +595,7 @@ public class Count_Set {
                                 }else{
                                     if(!(a==b))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(Code_String.IS+"|==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -619,7 +619,7 @@ public class Count_Set {
                                 }else{
                                     if(item2.equals(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(Code_String.IS+"|==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -636,7 +636,7 @@ public class Count_Set {
                                 }else{
                                     if(!(a!=b))
                                         throw new Exception("false");
-                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches("==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                    if(CountRecord.get(CountRecord.size()-1).get(index+1).Operator==null||!CountRecord.get(CountRecord.size()-1).get(index+1).Operator.matches(Code_String.IS+"|==|!=|<>|><")){//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                         CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
                                             CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
                                          CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(Type_String.TRUE);
@@ -927,7 +927,7 @@ public class Count_Set {
                             CountRecord.get(CountRecord.size()-1).get(count).Value.delete(0, CountRecord.get(CountRecord.size()-1).get(count).Value.length());
                             CountRecord.get(CountRecord.size()-1).get(count).Value.append(Type_String.FALSE);//將運涮結果定為假
                             while(count<CountRecord.get(CountRecord.size()-1).size()-1){//清除剩餘的特殊判斷式
-                                if(CountRecord.get(CountRecord.size()-1).get(count).Operator==null||!CountRecord.get(CountRecord.size()-1).get(count).Operator.matches("==|!=|<>|><"))//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
+                                if(CountRecord.get(CountRecord.size()-1).get(count).Operator==null||!CountRecord.get(CountRecord.size()-1).get(count).Operator.matches(Code_String.IS+"|==|!=|<>|><"))//如果接下來沒有運算子 或 接下來的運算子不是同層級的運算子
                                     break;//那就代表特殊判段已經結束，但不代表接下來不會再有特殊判斷
                                 CountRecord.get(CountRecord.size()-1).get(count).Operator=CountRecord.get(CountRecord.size()-1).get(count+1).Operator;
                                 CountRecord.get(CountRecord.size()-1).remove(count+1);

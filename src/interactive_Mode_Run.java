@@ -29,26 +29,31 @@ public class interactive_Mode_Run {
         }
         command.clear();
         //---------------------------------------------------
-        while(true){
+        while(true)command_read:{
             System.out.print(SS.brackets!=0||SS.Annotation?"...":">>>");
-            try {
-                if((SB=SS.StrBlankDeal_with(StringRead.Read()))!=null)
-                    Com=SB.toString();
-                else
-                    continue;//用來防止空白輸入造成的大間隔(空白輸出)
-            } catch (Exception e) {
-               AS.print.Print("錯誤！"+e.getMessage()+"\n");
-               continue;
-            }
-            if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                if(SS.add){//如果建立新指令為真
-                    SS.add=false;
-                    command.add(new Command(SB,LineNumbers));
+            String com_str = StringRead.Read();
+            do{
+                try {
+                    if((SB=SS.StrBlankDeal_with(com_str))!=null)
+                        Com=SB.toString();
+                    else if(com_str.matches("^\\s*$"))
+                            break command_read;//用來防止空白輸入造成的大間隔(空白輸出)
+                    else
+                        break;
+                } catch (Exception e) {
+                   AS.print.Print("錯誤！"+e.getMessage()+"\n");
+                   break command_read;
+                }
+                if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                    if(SS.add){//如果建立新指令為真
+                        SS.add=false;
+                        command.add(new Command(SB,LineNumbers));
+                    }else
+                        command.get(command.size()-1).Command.append(SB);
+                    SS.append=false;
                 }else
-                    command.get(command.size()-1).Command.append(SB);
-                SS.append=false;
-            }else
-                command.add(new Command(SB,LineNumbers));
+                    command.add(new Command(SB,LineNumbers));
+            }while(!SS.line_end);
             char ch=' ';
             try{
                 ch=Com.charAt(0);
@@ -58,14 +63,16 @@ public class interactive_Mode_Run {
                     System.out.println(Code_String.BREAK+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                 }else if(StringScan.startsWith(Com,Code_String.BEGIN)){
                             int setIf=0;
-                            while(true){
+                            while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -78,7 +85,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(StringScan.startsWith(SB.toString(),Code_String.BEGIN))
                                     setIf++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDBE))
@@ -93,27 +101,30 @@ public class interactive_Mode_Run {
                         System.out.println(Code_String.CONTINUE+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                 }else if(Com.startsWith(Code_String.CLASS+" ")){
                         int setCl=0;
-                        while(true){
-                            System.out.print("...");
-                            try {
-                                SB=SS.StrBlankDeal_with(StringRead.Read());
-                                LineNumbers++;
-                            } catch (Exception e) {
-                                AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                continue;
-                            }
-                            if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                    if(SS.add){//如果建立新指令為真
-                                        SS.add=false;
-                                        command.add(new Command(SB,LineNumbers));
+                        while(true)block_while:{
+                                System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
+                                try {
+                                    SB=SS.StrBlankDeal_with(command_str);
+                                    LineNumbers++;
+                                } catch (Exception e) {
+                                    AS.error.Error("錯誤！"+e.getMessage()+"\n");
+                                    break block_while;
+                                }
+                                if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                                    if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                                        if(SS.add){//如果建立新指令為真
+                                            SS.add=false;
+                                            command.add(new Command(SB,LineNumbers));
+                                        }else
+                                            command.get(command.size()-1).Command.append(SB);
+                                        SS.append=false;
                                     }else
-                                        command.get(command.size()-1).Command.append(SB);
-                                    SS.append=false;
+                                        command.add(new Command(SB,LineNumbers));
                                 }else
-                                    command.add(new Command(SB,LineNumbers));
-                            }else
-                                continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                             if(SB.toString().startsWith(Code_String.CLASS+" "))
                                 setCl++;
                             else if(StringScan.startsWith(SB.toString(),Code_String.ENDCL))
@@ -128,14 +139,16 @@ public class interactive_Mode_Run {
             }else if(ch=='d'){
                     if(StringScan.startsWith(Com,Code_String.DO)){
                             int setDo=0;
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -148,7 +161,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(StringScan.startsWith(SB.toString(),Code_String.DO))
                                     setDo++;
                                 else if(SB.toString().startsWith(Code_String.DWHILE+" "))
@@ -178,14 +192,16 @@ public class interactive_Mode_Run {
             }else if(ch=='f'){
                     if(Com.startsWith(Code_String.FOR+" ")){
                             int setFor=0;
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -198,7 +214,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(SB.toString().startsWith(Code_String.FOR+" "))
                                     setFor++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDFO))
@@ -222,14 +239,16 @@ public class interactive_Mode_Run {
                             isFirstFunction=true;//告知還在處理第一個函數
                         }
                         if(!matchFunctionLanbdaState){
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -242,7 +261,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(command.get(command.size()-1).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                                     try{
                                         if(SS.brackets==0)//判斷是不是讀取到所有函數宣告式
@@ -276,14 +296,16 @@ public class interactive_Mode_Run {
             }else if(ch=='i'){
                     if(Com.startsWith(Code_String.IF+" ")){
                             int setIf=0;
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -296,7 +318,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(SB.toString().startsWith(Code_String.IF+" "))
                                     setIf++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDIF))
@@ -309,14 +332,16 @@ public class interactive_Mode_Run {
             }else if(ch=='t'){
                     if(StringScan.startsWith(Com,Code_String.TRY)){
                             int setTry=0;
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -329,7 +354,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(StringScan.startsWith(SB.toString(),Code_String.TRY))
                                     setTry++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDTR))
@@ -342,14 +368,16 @@ public class interactive_Mode_Run {
             }else if(ch=='w'){
                     if(Com.startsWith(Code_String.WHILE+" ")){
                             int setWh=0;
-                            while(true){
+                             while(true)block_while:{
                                 System.out.print("...");
+                                String command_str = StringRead.Read();
+                                do{
                                 try {
-                                    SB=SS.StrBlankDeal_with(StringRead.Read());
+                                    SB=SS.StrBlankDeal_with(command_str);
                                     LineNumbers++;
                                 } catch (Exception e) {
                                     AS.error.Error("錯誤！"+e.getMessage()+"\n");
-                                    continue;
+                                    break block_while;
                                 }
                                 if(SB!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
                                     if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
@@ -362,7 +390,8 @@ public class interactive_Mode_Run {
                                     }else
                                         command.add(new Command(SB,LineNumbers));
                                 }else
-                                    continue;
+                                    break block_while;
+                                }while(!SS.line_end);
                                 if(SB.toString().startsWith(Code_String.WHILE+" "))
                                     setWh++;
                                 else if(StringScan.startsWith(SB.toString(),Code_String.ENDWH))
@@ -372,7 +401,7 @@ public class interactive_Mode_Run {
                             ch=' ';
                     }else
                             ch=' ';
-            }else if(SS.brackets==0&&Com.startsWith(":")){
+            }else if(SS.brackets==0&&ch == ':'){
                     System.out.println("標籤在一般模式下無法使用，只能在腳本檔或多行輸入模式中使用。");
             }else
                     ch=' ';

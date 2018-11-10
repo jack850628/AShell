@@ -6,6 +6,7 @@ public class Code_String {
     public static final String CALL     = "call";
     public static final String ADDSO    = "addso";
     public static final String ADDNPH   = "addnph";
+    public static final String BASE     = "base";
     public static final String NATIVE   = "native";
     public static final String VAR      = "var";
     public static final String UNVAR    = "unvar";
