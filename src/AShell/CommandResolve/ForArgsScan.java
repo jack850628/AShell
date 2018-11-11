@@ -5,12 +5,19 @@ import java.util.ArrayList;
 public class ForArgsScan {
 	public ArrayList<StringBuilder> Args=new ArrayList<>();
 	public ForArgsScan(String Name){
+            int brackets=0;//判斷括弧數量
+            
             Args.add(new StringBuilder());
             for(int i=0;i<Name.length();i++){
                 char ch=Name.charAt(i);
                 switch (ch) {
                     case '(':
+                        if(brackets++ != 0)
+                            Args.get(Args.size()-1).append(ch);
+                        break;
                     case ')':
+                        if(--brackets != 0)
+                            Args.get(Args.size()-1).append(ch);
                         break;
                     case ';':
                         Args.add(new StringBuilder());
