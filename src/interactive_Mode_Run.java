@@ -36,8 +36,11 @@ public class interactive_Mode_Run {
             try {
                 if((SB=SS.StrBlankDeal_with(com_str))!=null)
                     Com=SB.toString();
-                else
+                else{
+                    StringRead.setString(com_str.substring(SS.get_command_char_index()));
+                    SS.line_end = true;
                     continue;//用來防止空白輸入造成的大間隔(空白輸出)
+                }
             } catch (Exception e) {
                 AS.print.Print("錯誤！"+e.getMessage()+"\n");
                 SS.line_end = true;
