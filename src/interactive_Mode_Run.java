@@ -56,7 +56,10 @@ public class interactive_Mode_Run {
             }else
                 command.add(new Command(SB,LineNumbers));
             StringRead.setString(com_str.substring(SS.get_command_char_index()));
-            SS.line_end = true;
+            if(!SS.line_end)
+                SS.line_end = true;
+            else
+                LineNumbers++;
             char ch=' ';
             try{
                 ch=Com.charAt(0);
@@ -65,7 +68,7 @@ public class interactive_Mode_Run {
                 if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.BREAK)){
                     System.out.println(Code_String.BREAK+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                 }else if(StringScan.startsWith(Com,Code_String.BEGIN)){
-                            int setIf=0;
+                            int setBegin=0;
                             while_loop:while(true)block_while:{
                                 if(StringRead.get_temp_strlen() == 0)
                                     System.out.print("...");
@@ -73,7 +76,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -91,15 +93,16 @@ public class interactive_Mode_Run {
                                             command.add(new Command(SB,LineNumbers));
                                         
                                         if(StringScan.startsWith(SB.toString(),Code_String.BEGIN))
-                                            setIf++;
+                                            setBegin++;
                                         else if(StringScan.startsWith(SB.toString(),Code_String.ENDBE))
-                                            if(setIf--==0){
+                                            if(setBegin--==0){
                                                 StringRead.setString(command_str.substring(SS.get_command_char_index()));
                                                 SS.line_end = true;
                                                 break while_loop;
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else
@@ -116,7 +119,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -143,6 +145,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else if(SS.brackets==0&&Com.startsWith(Code_String.CATCH+" ")){
@@ -159,7 +162,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -186,6 +188,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else if(SS.brackets==0&&Com.startsWith(Code_String.DWHILE+" "))
@@ -217,7 +220,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -244,6 +246,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else if(Com.startsWith(Code_String.FUNCTION+" ")){
@@ -269,7 +272,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -321,6 +323,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                         }
                         ch=' ';
@@ -338,7 +341,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -355,7 +357,7 @@ public class interactive_Mode_Run {
                                         }else
                                             command.add(new Command(SB,LineNumbers));
                                         
-                                        if(StringScan.startsWith(SB.toString(),Code_String.IF))
+                                        if(SB.toString().startsWith(Code_String.IF+" "))
                                             setIf++;
                                         else if(StringScan.startsWith(SB.toString(),Code_String.ENDIF))
                                             if(setIf--==0){
@@ -365,6 +367,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else
@@ -379,7 +382,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -406,6 +408,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else
@@ -420,7 +423,6 @@ public class interactive_Mode_Run {
                                 do{
                                     try {
                                         SB=SS.StrBlankDeal_with(command_str);
-                                        LineNumbers++;
                                     } catch (Exception e) {
                                         SS.line_end = true;
                                         AS.error.Error("錯誤！"+e.getMessage()+"\n");
@@ -447,6 +449,7 @@ public class interactive_Mode_Run {
                                             }
                                     }
                                 }while(!SS.line_end);
+                                LineNumbers++;
                             }
                             ch=' ';
                     }else
