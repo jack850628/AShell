@@ -318,11 +318,12 @@ public class ResultsValue {
 	        +-------------+--------------+--------------+--------------+-------------+--------------+-------------+-------------+       
    **/ 
                         int frequency=1;//這是用來判斷每一維要建立幾個變數記憶體
-                        StringBuilder passge = null/*紀錄上一維陣列的起始記憶體位置*/, ArrayStyle=null/*紀錄這個陣列的開頭*/;
+                        ArrayList<StringBuilder> passge = null/*紀錄上一維陣列的起始記憶體位置*/;
+                        StringBuilder ArrayStyle=null/*紀錄這個陣列的開頭*/;
                         synchronized(LOCK){
                             for(int i=0;i<ArraySpecification.size();i++){
                                 frequency*=ArraySpecification.get(i);
-                                StringBuilder first=null;//紀錄這一維陣列的起始記憶體位置
+                                ArrayList<StringBuilder> first= new ArrayList<>();//紀錄這一維陣列的起始記憶體位置
                                 for(int j=0,index=0;j<frequency;j++){
                                     if(j%ArraySpecification.get(i)==0){//如果這是該維陣列的第一個元素
                                         //-----------------------------建立陣列大小函數-----------------------------------------------------------------------------
@@ -337,14 +338,15 @@ public class ResultsValue {
                                         if(i==0&&j==0)//如果這次是建立陣列的第一個值
                                             ArrayStyle=assge;//將陣列第一個值的記憶體位置指定給變數值
                                         else{
-                                           Memory_Management.get_Array_Item(Memory_Management.move(passge.toString(), index)).append(assge);//在上一維對應的變數記憶體中放入這次所建立的變數記憶體位置
+                                           Memory_Management.get_Array_Item(Memory_Management.move(passge.get(index/ArraySpecification.get(i-1)).toString(), index%ArraySpecification.get(i-1))).append(assge);//在上一維對應的變數記憶體中放入這次所建立的變數記憶體位置
                                            index++;
                                         }
-                                        if(j==0)//如果這次是建立這一維第一個變數記憶體位置
-                                            first=assge;//將建立的地役體位置指定給<紀錄這一維陣列的起始記憶體位置>變數
+                                        first.add(assge);//將建立的地役體位置指定給<紀錄這一維陣列的起始記憶體位置>變數
                                     }else
                                         Memory_Management.Array_Builder(null,new StringBuilder((i+1==ArraySpecification.size())?Type_String.NULL:""),null);
                                 }
+                                if(passge != null)
+                                    passge.clear();
                                 passge=first;
                             }
                         }
