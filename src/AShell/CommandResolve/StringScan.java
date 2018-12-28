@@ -284,12 +284,8 @@ public class StringScan {
     public static StringBuilder get_AShell_String_Character_Array(StringBuilder Str,int index) throws Exception{
         if(Str.charAt(0)!='\"')
             throw new Exception("型態錯誤，參數必須為String類型");
-        if(index < 0){
-            //因為setAShell_Value(String)並非public，所以透過反射調用
-            Method method = AShellType.class.getDeclaredMethod("setAShell_Value", String.class);
-            method.setAccessible(true);
-            index += ((AShellType)method.invoke(new AShellType(), Str.toString())).to_java_String().length();
-        }
+        if(index < 0)
+            index += get_AShell_String_Length(Str);
         for(int i=1,count=0;i<Str.length()-1;i++,count++){
             if(Str.charAt(i)!='\\'){//如果取到的字串不是跳脫字元
                 if(count==index)
