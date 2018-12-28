@@ -631,9 +631,13 @@ public class Memory_Management {
     public synchronized static String move(String assage,int distance) throws Exception{
         if(!assage.matches(Type_String.ARRAY_M))
             throw new AShellMempryValueNotFindException("'"+assage+"'不是有效的陣列記憶體");
-        if(distance==0)
+        if(distance == 0)
             return assage;
+        
         get_Array_return_struct GARS=M_get_Array(Integer.valueOf(assage.substring((Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@").length())));
+        
+        if(distance < 0)
+            distance += GARS.AMT.size;
         if(0<=distance&&distance<GARS.AMT.size){
             distance+=GARS.index;
             return Type_String.MEMORY_TYPE_FIRST+Type_String.ARRAY_N+"@"+Array_Memory.get(distance).Key;
