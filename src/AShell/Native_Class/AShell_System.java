@@ -11,6 +11,13 @@ public class AShell_System {
         AShThis.AS.stop.Stop();
         return new AShellType();
     }
+    public static AShellType exit(AShell_this AShThis,AShellType[] Args) throws Exception{
+        int exitCode = (Args.length != 0 && Args[0].Type == AShellType.java_Type.java_long)
+                ?(int)Args[0].to_java_long()
+                :0;
+        System.exit(exitCode);
+        return new AShellType();
+    }
     public static AShellType system(AShell_this AShThis,AShellType[] Args) throws Exception{
         return new AShellType(CallSystem.System(Args[0].to_java_String()));
     }

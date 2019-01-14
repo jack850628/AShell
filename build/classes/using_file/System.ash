@@ -1,8 +1,10 @@
 class System
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_System"
-		#結束批次執行
+		#結束執行
 		native finish(JAVA_CLASS)
+		#結束執行
+		native exit(JAVA_CLASS)
 		#呼叫終端機
 		native system(JAVA_CLASS)
 		#切換目錄
