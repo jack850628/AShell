@@ -120,16 +120,18 @@ public class AShell {
         //try{
         ThreadList.stream().forEach((Thread) -> {
             //Thread_Damage(r);
-            while(Thread.Run!=null){
-                try{
-                    Thread.RunState=false;
-                    Thread.Run.interrupt();
-                }catch(Exception e){
-                    //System.err.println("Log:"+(e.getMessage()));
-                    //Read(1);
-                }
-                Thread.Run=Thread.Run.BackThread;
+            Run run = Thread.Run;
+            while(run.BackThread != null){
+                run = run.BackThread;
             }
+            try{
+                Thread.RunState=false;
+                run.interrupt();
+            }catch(Exception e){
+                //System.err.println("Log:"+(e.getMessage()));
+                //Read(1);
+            }
+            
         });
         /*}catch(Exception e){
             System.err.println("Log:"+(e.getMessage()));
@@ -261,14 +263,15 @@ public class AShell {
                             if(scriptFile.isFile()){
                                 ValueArray.UsingAndCallTable.add(FileName.toString());
                                 Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),scriptFile.getParent(),RP,ValueArray/*,false*/);
-                                run.start();
-                                //if(r!=null){
+                                run.run();
+                                /*run.start();
+                                if(r!=null){
                                     synchronized(Thread){
                                         try {
                                             Thread.wait();
                                         } catch (InterruptedException e) {}
                                     }
-                                /*}else{
+                                }else{
                                     RP.Run=run;
                                    ThreadList.add(RP);//r==null就代表著這是執行最一開始的執行續，所以將最一開始的執行續放入執行續清單
                                 }*/
@@ -406,15 +409,16 @@ public class AShell {
                                 if(scriptFile.isFile()){
                                     ValueArray.UsingAndCallTable.add(FileName.toString());
                                     Run run=new Run(new FileReader(FileName.toString()),FileName.toString(),scriptFile.getParent(),RP,ValueArray/*,false*/);
-                                    run.start();
-                                    //if(r!=null){
+                                    run.run();
+                                    /*run.start();
+                                    if(r!=null){
                                         synchronized(Thread){
                                             try {
                                                 Thread.wait();
                                             } catch (InterruptedException e) {}
                                         }
-                                    //}else
-                                    //    ThreadList.add(RP);//r!=null就代表著這一次的呼叫是從開始按鈕發出，所以將執行續加入執行序列
+                                    }else
+                                        ThreadList.add(RP);//r!=null就代表著這一次的呼叫是從開始按鈕發出，所以將執行續加入執行序列*/
                                     break;
                                 }else
                                     if(!isUsing&&index==AShellLibrariesPath.size())
@@ -1040,9 +1044,9 @@ public class AShell {
             if(BackThread!=null){
                 if(RP!=null&&RP.RunState)
                     RP.Run=BackThread;
-                synchronized(BackThread){
+                /*synchronized(BackThread){
                     BackThread.notify();
-                }
+                }*/
             }else{
                 if(RP.RunState){//要RunState為真是因為當為假時一定是發生錯誤或呼叫了finally()，所以不需要再重複調用Stop()了
                     RP.RunState=false;
