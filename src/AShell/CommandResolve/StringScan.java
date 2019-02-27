@@ -107,7 +107,8 @@ public class StringScan {
                 String str=command_str.substring(command_char_index, command_char_index+1);
                 //System.out.print(str);
                     if(str.equals("#")&&!Annotation){
-                            break;
+                        command_char_index = str.length();
+                        break;
                     }else if(str.equals("/")&&!Annotation){
                         if(command_char_index+1<command_str.length()&&command_str.substring(command_char_index+1, command_char_index+2).equals("*")){
                             command_char_index++;
