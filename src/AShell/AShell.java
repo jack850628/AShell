@@ -282,7 +282,7 @@ public class AShell {
                         ch=' ';
                     break;
                 case 'n':
-                    if(getText().startsWith(Code_String.NATIVE+" ")){//讓AShell可以使用jav函數
+                    if(getText().startsWith(Code_String.NATIVE+" ")){//讓AShell可以使用java函數
                     /**
                                                                 AShell中調用java函數的語法(以Stdio.print為例子)
 
@@ -291,24 +291,20 @@ public class AShell {
                                                                 其中native關鍵字表明是要呼叫已經用java寫好的內建函數
                                                                 後面的函數名稱要跟java函數的名稱一樣，有分大小寫
                                                                 函數參數是表明要呼叫的java函數所在的java類別
-
                                                                 則對應這個例子的java函數如下
-
-                                                                /**
-                                                                * 提供給AShell的print函數
-                                                                * @param AS AShell語言解析器的主類別
-                                                                *  @param RP 執行續指標，用來記錄一個AShell執行續在執行續清單裡的位置
-                                                                * @param ValueArray 建立這個函數在AShell時的AShell執行緒的變數清單
-                                                                * @param Args AShell函數參數，是一個不定長度參數，AShell與java溝通用的類型交換類別
-                                                                * @return AShell與java溝通用的類型交換類別
-                                                                * @throws java.lang.Exception 類型轉換錯誤
-                                                                */
-                       /*
                                                                 public class AShell_Stdio {
-                                                                    public static String print(AShell AS,AShell.Run_Point RP,Value_Array ValueArray,String[] Args){
+                                                                    /**
+                                                                     * 提供給AShell的print函數
+                                                                     * @param AShell.Data_Type_And_Struct.AShell_this AShThis AShell執行續相關物件
+                                                                     * @param AShell.ValueProcess.AShellType[] Args AShell函數參數，是一個不定長度參數，AShell與java溝通用的類型交換類別
+                                                                     * @return AShell.ValueProcess.AShellType AShell與java溝通用的類型交換類別
+                                                                     * @throws java.lang.Exception 類型轉換錯誤
+                                                                     */
+                                                                    /*public static AShellType print(AShell_this AShThis,AShellType[] Args) throws Exception{
                                                                         ....
-                                                                        }
-                                                        }*/
+                                                                    }
+                                                                }
+                    */
                         ArrayNameResolve ANR=new ArrayNameResolve(getText().substring(Code_String.NATIVE.length()+1,getText().length()).trim());//取得函數名稱以及參數
                         if(ANR.Args.isEmpty())
                             throw new Exception("必須提供一個字串參數來表明java函數所在的java類別");
