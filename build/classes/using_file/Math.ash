@@ -1,15 +1,12 @@
+using Type
+
 class Math
 	static
 		var JAVA_CLASS="AShell.Native_Class.AShell_Math"
-		#轉整數
-		function toint(arg)
-			arg=(arg//1)
-			return arg
-		endfu
 		#四捨五入
 		function round(arg)
 			arg=(arg+0.5)
-			return base.toint(arg)
+			return Type.toInteger(arg)
 		endfu
 		#取絕對值
 		function abs(arg)
