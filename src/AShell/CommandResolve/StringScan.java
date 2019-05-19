@@ -84,6 +84,31 @@ public class StringScan {
 		SB.append("\"");
 		return SB;
     }
+    
+    /**
+     * 解析一行程式碼
+     * @param command 程式碼清單
+     * @param codeLine 程式碼
+     * @param LineNumbers 該程式碼行數
+     * @throws Exception 解析錯誤
+     */
+    public void Porser_Code_Line(CommandArray command, String codeLine, int LineNumbers) throws Exception{
+        do{
+            StringBuilder Com=this.StrBlankDeal_with(codeLine);
+            if(Com!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                if(this.brackets!=0||this.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                    if(this.add){//如果建立新指令為真
+                        this.add=false;
+                        command.add(new Command(Com,LineNumbers));
+                    }else
+                        command.get(command.size()-1).Command.append(Com);
+                    this.append=false;
+                }else
+                    command.add(new Command(Com,LineNumbers));
+            }
+        }while(!this.line_end);
+    }
+    
     /*用來過濾程式碼中開頭的空白、tab還有程式碼中的註解用的函數
     因為AShell是具有多執行緒能力的語言，所以會有發生同時間有兩個執行續使用註解、空白過濾器，因此過濾器不設定成靜態*/
     public boolean Annotation=false;//跨行註解判斷值

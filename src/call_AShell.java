@@ -69,7 +69,7 @@ public class call_AShell {
             command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME),0));
             StringScan SS=new StringScan();//實例化空白、註解過濾器
             try {
-                AS.Porser_Code_Line(command,new StringScan(),args[1],1);
+                SS.Porser_Code_Line(command,args[1],1);
             } catch (Exception e) {
                 System.err.println("錯誤！"+e.getMessage());
                 return;
