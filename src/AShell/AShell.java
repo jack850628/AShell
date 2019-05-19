@@ -504,6 +504,23 @@ public class AShell {
             }
         });
     }
+    public void Porser_Code_Line(CommandArray command, StringScan SS, String codeLine, int LineNumbers) throws Exception{
+        StringBuilder Com = null;
+        do{
+            Com=SS.StrBlankDeal_with(codeLine);
+            if(Com!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
+                if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
+                    if(SS.add){//如果建立新指令為真
+                        SS.add=false;
+                        command.add(new Command(Com,LineNumbers));
+                    }else
+                        command.get(command.size()-1).Command.append(Com);
+                    SS.append=false;
+                }else
+                    command.add(new Command(Com,LineNumbers));
+            }
+        }while(!SS.line_end);
+    }
     static class try_Count {
         public static enum State{Break,Continue,Tag,Exception,Return,None};//區塊結束狀態碼的所有狀態
         void set_Try(String Code,int LineNumbers,String fileName,String Message){
@@ -574,31 +591,16 @@ public class AShell {
                 StringScan SS=new StringScan();//實例化空白、註解過濾器
                 command=new CommandArray(fileName);
                 try (BufferedReader br = new BufferedReader(fr)) {
-                    String s;
-                    StringBuilder Com;
                     int LineNumbers=1;
+                    String s;
                     //System.out.println("S---------------------------------------------------");
                     while((s=br.readLine())!=null){//讀批次檔
-                        do{
-                            Com=SS.StrBlankDeal_with(s);
-                            if(Com!=null){//當Com為null就代表這行為空白或只有註解，並沒有程式碼
-                                if(SS.brackets!=0||SS.append){//如果括弧樹區間不等於零或加入在指令後端為真
-                                    if(SS.add){//如果建立新指令為真
-                                        SS.add=false;
-                                        command.add(new Command(Com,LineNumbers));
-                                    }else
-                                        command.get(command.size()-1).Command.append(Com);
-                                    SS.append=false;
-                                }else
-                                    command.add(new Command(Com,LineNumbers));
-                            }
-                        }while(!SS.line_end);
+                        Porser_Code_Line(command, SS, s, LineNumbers);
                         LineNumbers++;
                     }
-                    fr.close();
                     //System.out.println("E---------------------------------------------------");
-                    SS.Annotation=false;//關閉多行註解
                 }
+                fr.close();
                 CreateSyntaxTree.CST(command);
                 /*for(CommandArray a:command)
                     System.err.println(a.Command.toString());*/

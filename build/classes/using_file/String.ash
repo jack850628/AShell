@@ -19,7 +19,7 @@ class String
 		#當str2不是""或null時的分割方式
 		function split_no_enpty(str1,str2)
 			var str1_len=strlen(str1),index=1
-			for (var i=0;i<str1_len;i=i+1)#取得需要產生的陣列長度
+			for var i=0;i<str1_len;i=i+1#取得需要產生的陣列長度
 				if str1[i]==str2
 					index=index+1
 				endif
@@ -27,7 +27,7 @@ class String
 			var arr[index],buffer
 			arr[0]=""
 			index=0
-			for (var i=0;i<str1_len;i=i+1)
+			for var i=0;i<str1_len;i=i+1
 				buffer=str1[i]
 				if buffer==str2
 					index=index+1
@@ -41,7 +41,7 @@ class String
 		function split_is_enpty(str1)
 			var str1_len=strlen(str1)
 			var arr[str1_len]
-			for (var i=0;i<str1_len;i=i+1)
+			for var i=0;i<str1_len;i=i+1
 				arr[i]=str1[i]
 			endfo
 			return arr
@@ -52,7 +52,7 @@ class String
 			if str1_len<str2_len
 				return false
 			endif
-			for (var i=0;i<str2_len;i=i+1)
+			for var i=0;i<str2_len;i=i+1
 				if str1[i]!=str2[i]
 					return false
 				endif
@@ -65,7 +65,7 @@ class String
 			if str1_len<str2_len
 				return false
 			endif
-			for (var i=0,j=str1_len-str2_len;i<str2_len;i=i+1,j=j+1)
+			for var i=0,j=str1_len-str2_len;i<str2_len;i=i+1,j=j+1
 				if str1[j]!=str2[i]
 					return false
 				endif
@@ -77,7 +77,7 @@ class String
 			var buffer=""
 			var temp
 			var length=strlen(form)
-			for (var i=0;i<length;i=i+1)
+			for var i=0;i<length;i=i+1
 				temp=form[i]
 				if temp=="{"
 					if form[i+1]=="{"
@@ -135,7 +135,7 @@ class String
 		#更改字串內的字元
 		function setChar(char,index,string)
 			var new_string=""
-			for (var i=0;i<String.strlen(string);i=i+1)
+			for var i=0;i<String.strlen(string);i=i+1
 				if i!=index
 					new_string=new_string..string[i]
 				else
