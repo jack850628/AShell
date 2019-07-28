@@ -1,8 +1,6 @@
 package AShell.CommandResolve;
 
 import AShell.Data_Type_And_Struct.Type_String;
-import AShell.ValueProcess.AShellType;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class StringScan {
@@ -213,12 +211,12 @@ public class StringScan {
                 case '!':
                 case '>':
                 case '<':
-                    //畔對是否為 !=  >=  <=
-                    //if(Str.substring(i+1, i+2).equals("="))
+                    //判斷是否為 !=  >=  <=
+                    if(Str.charAt(i+1) == '=')
                         i++;
                     break;
                 case '=':
-                    if(Str.charAt(i+1)!='='&&Str.charAt(i+1)!='>')
+                    if(Str.charAt(i+1) != '=' && Str.charAt(i+1) != '>')
                         return true;
                     else
                         i++;

@@ -42,7 +42,7 @@ public class interactive_Mode_Run {
                     continue;//用來防止空白輸入造成的大間隔(空白輸出)
                 }
             } catch (Exception e) {
-                AS.print.Print("錯誤！"+e.getMessage()+"\n");
+                AS.error.Error("錯誤！"+e.getMessage()+"\n");
                 SS.line_end = true;
                 continue;
             }
@@ -66,7 +66,7 @@ public class interactive_Mode_Run {
             }catch(Exception e){}
             if(ch=='b'){
                 if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.BREAK)){
-                    System.out.println(Code_String.BREAK+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
+                    AS.error.Error(Code_String.BREAK+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                 }else if(StringScan.startsWith(Com,Code_String.BEGIN)){
                             int setBegin=0;
                             while_loop:while(true)block_while:{
@@ -109,7 +109,7 @@ public class interactive_Mode_Run {
                     ch=' ';
                 }else if(ch=='c'){
                     if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.CONTINUE)){
-                            System.out.println(Code_String.CONTINUE+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
+                            AS.error.Error(Code_String.CONTINUE+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                     }else if(Com.startsWith(Code_String.CLASS+" ")){
                             int setCl=0;
                             while_loop:while(true)block_while:{
@@ -149,7 +149,7 @@ public class interactive_Mode_Run {
                             }
                             ch=' ';
                     }else if(SS.brackets==0&&Com.startsWith(Code_String.CATCH+" ")){
-                                System.out.println(Code_String.CATCH+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
+                                AS.error.Error(Code_String.CATCH+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
                     }else
                             ch=' ';
                 }else if(ch=='d'){
@@ -192,22 +192,22 @@ public class interactive_Mode_Run {
                             }
                             ch=' ';
                     }else if(SS.brackets==0&&Com.startsWith(Code_String.DWHILE+" "))
-                            System.out.println(Code_String.DWHILE+"無法單獨使用，須和"+Code_String.DO+"一同使用。");
+                            AS.error.Error(Code_String.DWHILE+"無法單獨使用，須和"+Code_String.DO+"一同使用。");
                     else
                             ch=' ';
             }else if(ch=='e'){
                     if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ELSE))
-                            System.out.println(Code_String.ELSE+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
+                            AS.error.Error(Code_String.ELSE+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
                     else if(SS.brackets==0&&Com.startsWith(Code_String.ENDIF+" "))
-                            System.out.println(Code_String.ENDIF+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
+                            AS.error.Error(Code_String.ENDIF+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
                     else if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ENDIF))
-                            System.out.println(Code_String.ENDIF+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
+                            AS.error.Error(Code_String.ENDIF+"無法單獨使用，須和"+Code_String.IF+"一同使用。");
                     else if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ENDWH))
-                            System.out.println(Code_String.ENDWH+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
+                            AS.error.Error(Code_String.ENDWH+"無法單獨使用，須和"+Code_String.WHILE+"一同使用。");
                     else if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ENDCL))
-                            System.out.println(Code_String.ENDCL+"無法單獨使用，須和"+Code_String.CLASS+"一同使用。");
+                            AS.error.Error(Code_String.ENDCL+"無法單獨使用，須和"+Code_String.CLASS+"一同使用。");
                     else if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.ENDTR))
-                            System.out.println(Code_String.ENDTR+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
+                            AS.error.Error(Code_String.ENDTR+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
                     else
                             ch=' ';
             }else if(ch=='f'){
@@ -328,7 +328,7 @@ public class interactive_Mode_Run {
                         }
                         ch=' ';
                     }if(SS.brackets==0&&StringScan.startsWith(Com,Code_String.FINALLY))
-                        System.out.println(Code_String.FINALLY+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
+                        AS.error.Error(Code_String.FINALLY+"無法單獨使用，須和"+Code_String.TRY+"一同使用。");
                     else
                             ch=' ';
             }else if(ch=='i'){
@@ -455,7 +455,7 @@ public class interactive_Mode_Run {
                     }else
                             ch=' ';
             }else if(SS.brackets==0&&ch == ':'){
-                    System.out.println("標籤在一般模式下無法使用，只能在腳本檔或多行輸入模式中使用。");
+                    AS.error.Error("標籤在一般模式下無法使用，只能在腳本檔或多行輸入模式中使用。");
             }else
                     ch=' ';
             if(ch==' '){
