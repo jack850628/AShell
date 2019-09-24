@@ -25,17 +25,17 @@ public class Type_String {
     public static final String DIGITAL                     = "[-+]?\\d+[.]?\\d*|[-+]?\\d+\\.\\d+E[-]?\\d+|[-+]?Infinity";//數字(整數或浮點)
     public static final String POSITIVE_DIGITAL            = "[+]?\\d+[.]?\\d*|[+]?\\d+\\.\\d+E[-]?\\d+|[+]?Infinity";
     public static final String NEGATIVE_DIGITAL            = "-\\d+[.]?\\d*|-\\d+\\.\\d+E[-]?\\d+|-Infinity";
-    public static final String INTEGER                     = "[-+]?\\d+";//整數
-    public static final String POSITIVE_INTEGER            = "[+]?\\d+";
-    public static final String NEGATIVE_INTEGER            = "-\\d+";
+    public static final String INTEGER                     = "[-+]?\\d+(?:\\.0)?";//整數
+    public static final String POSITIVE_INTEGER            = "[+]?\\d+(?:\\.0)?";
+    public static final String NEGATIVE_INTEGER            = "-\\d+(?:\\.0)?";
     public static final String FLOAT                       = "[-+]?\\d+\\.\\d*|[-+]?\\d+\\.\\d+E[-]?\\d+|[-+]?Infinity";
     public static final String POSITIVE_FLOAT              = "[+]?\\d+\\.\\d*|[+]?\\d+\\.\\d+E[-]?\\d+|[+]?Infinity";//正浮點數
     public static final String NEGATIVE_FLOAT              = "-\\d+\\.\\d*|-\\d+\\.\\d+E[-]?\\d+|-Infinity";//負浮點數
     public static final String INSTANCE_FUNCTION_NAME      = "_inst_";
     public static final String DESTRUCTOR_FUNCTION_NAME    = "_dest_";
     public static final String VALUE_NAME                  = "[A-Za-z\\u4e00-\\u9fa5_$][A-Za-z\\u4e00-\\u9fa50-9_$]*";//匹配中文:[\u4e00-\u9fa5]   匹配日文[\u0800-\u4e00]
-    public static final String ASHELL_TYPE                 = String.format("%s|%s|%s|%s|%s|AShell_(%s|%s|%s|%s|%s)@\\d+", NULL,DIGITAL,NAN,TRUE,FALSE,OBJECT_N,CLASS_N,
+    public static final String ASHELL_TYPE                 = String.format("%s|%s|%s|%s|%s|AShell_(?:%s|%s|%s|%s|%s)@\\d+", NULL,DIGITAL,NAN,TRUE,FALSE,OBJECT_N,CLASS_N,
                                                                                                                                     FUNCTION_N,NATIVE_FUNCTION_N,ARRAY_N);
-    public static final String ASHELL_TYPE_EXCLUDE_DIGITAL = String.format("%s|%s|%s|%s|AShell_(%s|%s|%s|%s|%s)@\\d+", NULL,NAN,TRUE,FALSE,OBJECT_N,CLASS_N,
+    public static final String ASHELL_TYPE_EXCLUDE_DIGITAL = String.format("%s|%s|%s|%s|AShell_(?:%s|%s|%s|%s|%s)@\\d+", NULL,NAN,TRUE,FALSE,OBJECT_N,CLASS_N,
                                                                                                                                     FUNCTION_N,NATIVE_FUNCTION_N,ARRAY_N);
 }
