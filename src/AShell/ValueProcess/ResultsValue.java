@@ -200,14 +200,15 @@ public class ResultsValue {
                         }
                     }
                 }
-                Tent.delete(0, Tent.length());
-                if(Original)
-                   Tent.append(Variable);
-                else{
-                    StringBuilder Str;
-                    Tent.append(Str=new StrDW(AS,RP, Variable.toString(), ValueArray).Str);
-                    if(Str.toString().matches(Type_String.MEMORY_TYPE))
-                        Memory_Management.Cut_To_Arguments(Str.toString());//將參考指數減一
+                if(Original){
+                    Tent.delete(0, Tent.length());
+                    Tent.append(Variable);
+                }else{
+                    StringBuilder str = new StrDW(AS,RP, Variable.toString(), ValueArray).Str;
+                    if(Tent.toString().matches(Type_String.CLASS_M) && str.toString().matches(Type_String.MEMORY_TYPE))
+                        Memory_Management.Cut_To_Arguments(str.toString());//將參考指數減一
+                    Tent.delete(0, Tent.length());
+                    Tent.append(str);
                 }
                 if(Tent.toString().matches(Type_String.MEMORY_TYPE))//判斷取得值是不是記憶體參考
                     AShell_Memory_Type.push(Tent.toString());//放入AShell記憶體類型暫存堆疊
