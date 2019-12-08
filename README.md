@@ -7,7 +7,7 @@ http://blog.xuite.net/supmart/blog/429774559 \
 將專案中build目錄中的classes改名為AShell並放到C:\裡 \
 ![Alt text](image1.PNG)
 
-只需要在C:\ASell目錄下輸入AShell可以啟動AShell互動式命令列界面 \
+只需要在C:\AShell目錄下輸入AShell可以啟動AShell互動式命令列界面 \
 <img src="image2.PNG" width="400">
 
 若要使用AShell腳本檔只需要輸入\
