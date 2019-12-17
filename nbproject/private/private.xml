@@ -17,7 +17,9 @@
             <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/AShell.java</file>
             <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/Native_Class/AShell_File_Write.java</file>
             <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/ValueProcess/Count_Set.java</file>
+            <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/ValueProcess/VarStrDW.java</file>
             <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/Memory_Management/Memory_Management.java</file>
+            <file>file:/C:/Users/jack8/Documents/NetBeansProjects/AShell/src/AShell/CommandResolve/FunctionNameResolve.java</file>
         </group>
     </open-files>
 </project-private>

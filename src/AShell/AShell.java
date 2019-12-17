@@ -43,7 +43,7 @@ import java.util.LinkedHashSet;
 //import java.util.Properties;
 
 public class AShell {
-    private String VERSTION="1.1.9.2";
+    private final String VERSTION = "1.1.9.3";
     private final String PATH_TYPE="\\";//資料夾分隔符號類型
     private final String AShell_LIBRARIES_PATH = "C:\\AShell\\using_file";
     private final String NATIVE_URL_PATH = "C:\\AShell\\";
@@ -887,16 +887,15 @@ public class AShell {
                     }else if(command.get(ComLenght).Command.toString().startsWith(Code_String.FUNCTION+" ")){
                         FunctionNameResolve FNR=new FunctionNameResolve(command.get(ComLenght).Command.substring(Code_String.FUNCTION.length()+1).trim());
                         Function fun=new Function(ValueArray.Reference(),command.fileName);
+                        //System.out.println("Function: " + FNR.Name);
                         new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                 .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
+                        fun.ValueArray.Previous_Floor = ValueArray;
                         for(StringBuilder parameter: FNR.Args){//建立函數參數
-                            String[] arg=parameter.toString().split("=",2);//將函數參數跟=(賦值運算子)符號做分離
-                            if(arg.length==1)
-                                fun.ValueArray.add(new Value(new StringBuilder(arg[0]),new StringBuilder(Type_String.NULL)));
-                            else
-                                fun.ValueArray.add(new Value(new StringBuilder(arg[0]),
-                                        new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
+                            //System.out.println("args: " + parameter);
+                            new VarStrDW(AShell.this,RP,parameter.toString(),fun.ValueArray,VarMode.Mode.Var);
                         }
+                        fun.ValueArray.Previous_Floor = null;
                         int setFun=0;
                         if(FNR.Lanbda!=null){
                             FNR.Lanbda.insert(0, Code_String.RETURN+" ");
@@ -1310,14 +1309,11 @@ public class AShell {
                             Function fun=new Function(ValueArray.Reference(),command.fileName);
                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
+                            fun.ValueArray.Previous_Floor = ValueArray;
                             for(StringBuilder parameter: FNR.Args){//建立函數參數
-                                String[] arg=parameter.toString().split("=",2);//將函數參數跟=(賦值運算子)符號做分離
-                                if(arg.length==1)
-                                    fun.ValueArray.add(new Value(new StringBuilder(arg[0]),new StringBuilder(Type_String.NULL)));
-                                else
-                                    fun.ValueArray.add(new Value(new StringBuilder(arg[0]),
-                                            new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
+                                new VarStrDW(AShell.this,RP,parameter.toString(),fun.ValueArray,VarMode.Mode.Var);
                             }
+                            fun.ValueArray.Previous_Floor = null;
                             int setFun=0;
                             if(FNR.Lanbda!=null){
                                 FNR.Lanbda.insert(0, Code_String.RETURN+" ");
@@ -1723,14 +1719,11 @@ public class AShell {
                             Function fun=new Function(ValueArray.Reference(),command.fileName);
                             new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                     .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
+                            fun.ValueArray.Previous_Floor = ValueArray;
                             for(StringBuilder parameter: FNR.Args){//建立函數參數
-                                String[] arg=parameter.toString().split("=",2);//將函數參數跟=(賦值運算子)符號做分離
-                                if(arg.length==1)
-                                    fun.ValueArray.add(new Value(new StringBuilder(arg[0]),new StringBuilder(Type_String.NULL)));
-                                else
-                                    fun.ValueArray.add(new Value(new StringBuilder(arg[0]),
-                                            new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
+                                new VarStrDW(AShell.this,RP,parameter.toString(),fun.ValueArray,VarMode.Mode.Var);
                             }
+                            fun.ValueArray.Previous_Floor = null;
                             int setFun=0;
                             if(FNR.Lanbda!=null){
                                 FNR.Lanbda.insert(0, Code_String.RETURN+" ");
@@ -2168,14 +2161,11 @@ public class AShell {
                                     Function fun=new Function(ValueArray.Reference(),command.fileName);
                                     new VarStrDW(AShell.this,RP,FNR.Name.append("=")
                                             .append(Memory_Management.Function_Builder(fun)).toString(),ValueArray,VarMode.Mode.Var);
+                                    fun.ValueArray.Previous_Floor = ValueArray;
                                     for(StringBuilder parameter: FNR.Args){//建立函數參數
-                                        String[] arg=parameter.toString().split("=",2);//將函數參數跟=(賦值運算子)符號做分離
-                                        if(arg.length==1)
-                                            fun.ValueArray.add(new Value(new StringBuilder(arg[0]),new StringBuilder(Type_String.NULL)));
-                                        else
-                                            fun.ValueArray.add(new Value(new StringBuilder(arg[0]),
-                                                    new VarStrDW(AShell.this,RP,arg[1],ValueArray,VarMode.Mode.Intermediary).Str));
+                                        new VarStrDW(AShell.this,RP,parameter.toString(),fun.ValueArray,VarMode.Mode.Var);
                                     }
+                                    fun.ValueArray.Previous_Floor = null;
                                     int setFun=0;
                                     if(FNR.Lanbda!=null){
                                         FNR.Lanbda.insert(0, Code_String.RETURN+" ");

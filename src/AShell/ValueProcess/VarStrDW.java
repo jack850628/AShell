@@ -431,12 +431,10 @@ public class VarStrDW {
                                             }
                                             continue;
                                     }
-                                    if(!str.equals(" ")&&!str.equals("  ")){
-                                        if(Args.isEmpty())
-                                            Args.add(new StringBuilder(str));
-                                        else
-                                            Args.get(Args.size()-1).append(str);
-                                    }
+                                    if(Args.isEmpty())
+                                        Args.add(new StringBuilder(str));
+                                    else
+                                        Args.get(Args.size()-1).append(str);
                                 }
                                 ResultsValue.FunctionResults(AS,RP,BUValueArray,ValueArray,AShell_Memory_Type,Args,Variable,CountRecord,true);
                             }else if(CountRecord.get(CountRecord.size()-1).get(CountRecord.

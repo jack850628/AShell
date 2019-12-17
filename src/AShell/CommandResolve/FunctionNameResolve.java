@@ -109,10 +109,11 @@ public class FunctionNameResolve {
                                             }else if(str.equals("\\"))
                                                 Args.get(Args.size()-1).append(Str.substring(++i, i+1));
                                         }
-				}else if(!str.equals(" ")&&!str.equals("  ")){
-                                    if(!Results)
+				}else{
+                                    if(!Results){
+                                        if(!str.equals(" ")&&!str.equals("  "))
                                             this.Name.append(str);
-                                    else{
+                                    }else if(Record > 0){
                                             if(Args.isEmpty())
                                                 Args.add(new StringBuilder(str));
                                             else
@@ -121,5 +122,12 @@ public class FunctionNameResolve {
                                 }
                         }
 		}
+                /*for(int i = 0;i < Args.size();i++){
+                    String s = Args.get(i).toString().trim();
+                    if(s.length() != Args.get(i).length()){
+                        Args.get(i).delete(0, Args.get(i).length());
+                        Args.get(i).append(s);
+                    }
+                }*/
 	}
 }
