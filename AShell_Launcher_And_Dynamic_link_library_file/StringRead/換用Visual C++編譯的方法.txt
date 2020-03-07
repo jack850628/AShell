@@ -1,0 +1,4 @@
+把StringRead.cpp第3行的#include <unistd.h>註解掉
+
+cl /EHsc /c StringRead.cpp /I "C:\Program Files\OpenJDK\openjdk-11.0.5_10\include\win32" /I "C:\Program Files\OpenJDK\openjdk-11.0.5_10\include"
+link /DLL /OUT:StringRead.dll StringRead.obj
