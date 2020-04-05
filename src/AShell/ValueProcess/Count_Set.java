@@ -38,7 +38,7 @@ public class Count_Set {
     * @throws java.lang.Exception 運算子'!'使用錯誤
     */
     public static int CountSet1(ArrayList<Count_Array> CountRecord,int index) throws Exception{
-        if(CountRecord.get(CountRecord.size()-1).size()>1){
+        if(CountRecord.get(CountRecord.size()-1).get(index).Value.toString().equals("")){
             switch (CountRecord.get(CountRecord.size()-1).
                     get(index).
                     Operator) {
@@ -108,22 +108,20 @@ public class Count_Set {
     * @param index 須被運算的項目在陣列中的位置
     * @return 負數處理判斷，用來判斷這個這次運算子後面的 - 是負號還是減號 ，如果為null就代表著已經是運算式的末端，後面沒東西了*/
     public static int CountSet2(ArrayList<Count_Array> CountRecord,int index){
-        if(CountRecord.get(CountRecord.size()-1).size()>1){
-            switch (CountRecord.get(CountRecord.size()-1).
-                    get(index).
-                    Operator) {
-                case "**":
-                {
-                    BooleanChange(CountRecord,index);
-                    double a=IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
-                        b=IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
-                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
-                        CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
-                    a=pow(a,b);
-                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(String.valueOf(a).matches(Type_String.INTEGER)?String.format("%.0f", a):a);
-                    CountRecord.get(CountRecord.size()-1).remove(index);
-                    break;
-                }
+        switch (CountRecord.get(CountRecord.size()-1).
+                get(index).
+                Operator) {
+            case "**":
+            {
+                BooleanChange(CountRecord,index);
+                double a=IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index).Value.toString()),
+                    b=IsNumeric.isNumeric(CountRecord.get(CountRecord.size()-1).get(index+1).Value.toString());
+                CountRecord.get(CountRecord.size()-1).get(index+1).Value.delete(0,
+                    CountRecord.get(CountRecord.size()-1).get(index+1).Value.length());
+                a=pow(a,b);
+                CountRecord.get(CountRecord.size()-1).get(index+1).Value.append(String.valueOf(a).matches(Type_String.INTEGER)?String.format("%.0f", a):a);
+                CountRecord.get(CountRecord.size()-1).remove(index);
+                break;
             }
         }
         return --index;
