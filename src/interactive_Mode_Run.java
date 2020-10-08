@@ -20,7 +20,7 @@ public class interactive_Mode_Run {
         StringBuilder SB = null;
         String Com = null;
         //------------加入Stdio函式庫---------------
-        command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME_FOR_INTRACTIVE_MODE),0));
+        command.add(new Command(new StringBuilder(Code_String.USING+" "+AutoLibraryConfig.LIBRARY_NAME_FOR_INTRACTIVE_MODE),0));
         AS.ComLineRun(ValueArray,command);
         synchronized(this){
             try {

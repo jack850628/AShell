@@ -2,6 +2,7 @@ import AShell.*;
 import AShell.CommandResolve.Command;
 import AShell.CommandResolve.CommandArray;
 import AShell.CommandResolve.StringScan;
+import AShell.Data_Type_And_Struct.Code_String;
 import AShell.Data_Type_And_Struct.Value_Array;
 import java.io.File;
 import java.util.Arrays;
@@ -66,7 +67,7 @@ public class call_AShell {
                  scan.close();
              },System.getProperty("user.dir"));
             CommandArray command=new CommandArray("<Stdin>");
-            command.add(new Command(new StringBuilder("using "+AutoLibraryConfig.LIBRARY_NAME),0));
+            command.add(new Command(new StringBuilder(Code_String.USING+" "+AutoLibraryConfig.LIBRARY_NAME),0));
             StringScan SS=new StringScan();//實例化空白、註解過濾器
             try {
                 SS.Porser_Code_Line(command,args[1],1);
